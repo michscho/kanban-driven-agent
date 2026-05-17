@@ -20,7 +20,6 @@ export default function Home() {
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
   const [minimized, setMinimized] = useState(false);
-  const floatingBtnBottomRight = useFeature('packe-bitte-das-verkleinerte-kreis-icon-beim-entfe');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -134,7 +133,7 @@ export default function Home() {
       {/* Minimized floating logo button */}
       {minimized && (
         <button
-          className={`floating-logo-btn${floatingBtnBottomRight ? ' floating-logo-btn-right' : ''}`}
+          className="floating-logo-btn floating-logo-btn-right"
           onClick={() => setMinimized(false)}
           title="Kanban Board öffnen"
         >
