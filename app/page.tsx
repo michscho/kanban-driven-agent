@@ -85,7 +85,16 @@ export default function Home() {
   }
 
   async function action(id: number, path: string) {
-    await fetch(`/api/todos/${id}/${path}`, { method: 'POST' });
+    const response = await fetch(`/api/todos/${id}/${path}`, { method: 'POST' });
+    // Feature flag: improved revert error handling
+    if (improvedRevertErrorHandling && path === 'revert' && !response.ok) {
+      try {
+        const data = await response.json();
+        alert(`Revert fehlgeschlagen: ${data.error || 'Unbekannter Fehler'}`);
+      } catch {
+        alert('Revert fehlgeschlagen: Unbekannter Fehler');
+      }
+    }
     refresh();
   }
 
@@ -1341,14 +1350,12 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
             </button>
             <GitHubLink className="intro-v2-cta-secondary" />
           </div>
-          <Feature flag="f-ge-in-intro-hinzu-clone-now-https-github-com-mic">
-            <div className="intro-v2-clone-now">
-              <span className="intro-v2-clone-label">Clone now:</span>
-              <a href="https://github.com/michscho/kanban-driven-agent" target="_blank" rel="noopener noreferrer" className="intro-v2-clone-link">
-                https://github.com/michscho/kanban-driven-agent
-              </a>
-            </div>
-          </Feature>
+          <div className="intro-v2-clone-now">
+            <span className="intro-v2-clone-label">Clone now:</span>
+            <a href="https://github.com/michscho/kanban-driven-agent" target="_blank" rel="noopener noreferrer" className="intro-v2-clone-link">
+              https://github.com/michscho/kanban-driven-agent
+            </a>
+          </div>
         </div>
 
         {/* WebApp Mockup with Extension Overlay */}
