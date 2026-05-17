@@ -130,6 +130,9 @@ function Card({
           <>
             <a href={`/?feature=${slug}`} target="_blank" rel="noreferrer">Preview ↗</a>
             <button className="primary" onClick={() => onAction(id, 'approve')}>Approve</button>
+            <Feature flag="review-prozess-verbessern">
+              <button className="warning" onClick={() => onAction(id, 'run')}>Änderungen</button>
+            </Feature>
             <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
             <button onClick={onOpenLog}>Log</button>
           </>
