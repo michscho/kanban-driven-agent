@@ -146,7 +146,8 @@ input, textarea { font: inherit; color: inherit; }
 
 /* Floating Todo Container */
 .todo-floating-container {
-  position: relative;
+  position: sticky;
+  top: 16px;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: 16px;
@@ -155,15 +156,20 @@ input, textarea { font: inherit; color: inherit; }
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.2),
     0 10px 15px -3px rgba(0, 0, 0, 0.3),
-    0 20px 40px -4px rgba(0, 0, 0, 0.25);
+    0 20px 40px -4px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
   z-index: 10;
+  backdrop-filter: blur(8px);
+  background: rgba(21, 23, 27, 0.95);
 }
 
 :root[data-theme="light"] .todo-floating-container {
+  background: rgba(255, 255, 255, 0.95);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.08),
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 20px 40px -4px rgba(0, 0, 0, 0.12);
+    0 20px 40px -4px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .todo-floating-container .header { margin-bottom: 20px; }
