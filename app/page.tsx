@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -185,6 +186,11 @@ export default function Home() {
 
   return (
     <div className="app">
+      {/* Feature-flagged Intro Page */}
+      <Feature flag="gestalte-mir-eine-intro-seite-kanban-driven-agent-">
+        <IntroPage />
+      </Feature>
+
       <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing todo-floating-transparent`}>
         {todoInterface}
       </div>
@@ -483,6 +489,327 @@ if (useFeature('my-flag')) {
       </div>
 
       <hr className="landing-divider" />
+    </div>
+  );
+}
+
+// Full Intro Page Component (Feature flag: gestalte-mir-eine-intro-seite-kanban-driven-agent-)
+function IntroPage() {
+  return (
+    <div className="intro-page">
+      {/* Hero Section */}
+      <section className="intro-hero">
+        <div className="intro-hero-content">
+          <div className="intro-hero-brand">
+            <Logo size={72} />
+          </div>
+          <h1 className="intro-hero-title">Kanban-driven Agent</h1>
+          <p className="intro-hero-claim">The operating system for autonomous coding agents.</p>
+          <p className="intro-hero-subtitle">
+            Plan, execute, review, and ship software tasks through an AI-powered Kanban workflow — running locally, connected to your repo, and fully under your control.
+          </p>
+          <div className="intro-hero-cta">
+            <a href="#get-started" className="intro-btn-primary">Get Started</a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="intro-btn-secondary">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="intro-github-icon">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Strong Claim Banner */}
+      <section className="intro-claim-banner">
+        <p>Autonomous coding should not feel like magic. It should feel like a workflow.</p>
+      </section>
+
+      {/* Hero Features Grid */}
+      <section className="intro-features-grid">
+        <div className="intro-feature-card">
+          <div className="intro-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h3>Own your data</h3>
+          <p>Run Kanban-driven Agent locally. Your code, tasks, logs, and agent context stay on your machine.</p>
+        </div>
+        <div className="intro-feature-card">
+          <div className="intro-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <h3>Repo-native by design</h3>
+          <p>Install it as an extension inside your existing repository and let agents work directly where your code lives.</p>
+        </div>
+        <div className="intro-feature-card">
+          <div className="intro-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <h3>Visible agent workflows</h3>
+          <p>Every task moves through Backlog, In Progress, Review, and Shipped — so you always know what the agent is doing.</p>
+        </div>
+        <div className="intro-feature-card">
+          <div className="intro-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <h3>Human approval built in</h3>
+          <p>Review changes before they ship, inspect logs, and revert completed tasks when needed.</p>
+        </div>
+      </section>
+
+      {/* Product Demo Section */}
+      <section className="intro-demo-section">
+        <h2>See it in action</h2>
+        <p className="intro-demo-subtitle">
+          Bring structure, visibility, and control to AI software development. Kanban-driven Agent turns autonomous coding into a clear workflow.
+        </p>
+        <div className="intro-demo-board">
+          <div className="intro-demo-column">
+            <div className="intro-demo-column-header">Backlog</div>
+            <div className="intro-demo-card">
+              <div className="intro-demo-card-title">#12 Add user settings page</div>
+              <div className="intro-demo-card-meta">pending</div>
+            </div>
+            <div className="intro-demo-card">
+              <div className="intro-demo-card-title">#13 Implement dark mode</div>
+              <div className="intro-demo-card-meta">pending</div>
+            </div>
+          </div>
+          <div className="intro-demo-column">
+            <div className="intro-demo-column-header">In Progress</div>
+            <div className="intro-demo-card intro-demo-card-active">
+              <div className="intro-demo-card-title">#14 Build API endpoints</div>
+              <div className="intro-demo-card-meta">in_progress</div>
+              <div className="intro-demo-card-progress"></div>
+            </div>
+          </div>
+          <div className="intro-demo-column">
+            <div className="intro-demo-column-header">Review</div>
+            <div className="intro-demo-card intro-demo-card-review">
+              <div className="intro-demo-card-title">#11 Create login flow</div>
+              <div className="intro-demo-card-meta">done</div>
+            </div>
+          </div>
+          <div className="intro-demo-column">
+            <div className="intro-demo-column-header">Shipped</div>
+            <div className="intro-demo-card intro-demo-card-shipped">
+              <div className="intro-demo-card-title">#10 Setup project structure</div>
+              <div className="intro-demo-card-meta">approved</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="intro-how-section">
+        <h2>From idea to shipped</h2>
+        <p className="intro-how-subtitle">
+          Create a task, define acceptance criteria, and let the agent move it through the board.
+        </p>
+        <div className="intro-how-steps">
+          <div className="intro-how-step">
+            <div className="intro-how-step-number">1</div>
+            <div className="intro-how-step-content">
+              <h3>Create a task</h3>
+              <p>Define what you want to build with a clear title and acceptance criteria.</p>
+            </div>
+          </div>
+          <div className="intro-how-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+          <div className="intro-how-step">
+            <div className="intro-how-step-number">2</div>
+            <div className="intro-how-step-content">
+              <h3>Agent executes</h3>
+              <p>The AI agent writes code, creates files, and implements your feature.</p>
+            </div>
+          </div>
+          <div className="intro-how-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+          <div className="intro-how-step">
+            <div className="intro-how-step-number">3</div>
+            <div className="intro-how-step-content">
+              <h3>Review changes</h3>
+              <p>Preview the implementation behind a feature flag before it goes live.</p>
+            </div>
+          </div>
+          <div className="intro-how-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+          <div className="intro-how-step">
+            <div className="intro-how-step-number">4</div>
+            <div className="intro-how-step-content">
+              <h3>Ship with confidence</h3>
+              <p>Approve to merge, or revert if something isn&apos;t right.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Local-First Section */}
+      <section className="intro-local-section">
+        <div className="intro-local-content">
+          <div className="intro-local-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <h2>Run locally. Own your data.</h2>
+          <p className="intro-local-tagline">No cloud lock-in. No hidden context sharing.</p>
+          <p className="intro-local-desc">
+            Your repository, task history, logs, and agent output stay on your machine. Kanban-driven Agent runs entirely locally, giving you complete control over your development environment and data privacy.
+          </p>
+          <div className="intro-local-features">
+            <div className="intro-local-feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>No cloud dependency</span>
+            </div>
+            <div className="intro-local-feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Data stays on your machine</span>
+            </div>
+            <div className="intro-local-feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Full control over context</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Repo Extension Section */}
+      <section className="intro-repo-section">
+        <h2>Integrates into your repo</h2>
+        <p className="intro-repo-subtitle">
+          Use Kanban-driven Agent as a repo extension. It works where your project already lives — with your files, your branches, and your development workflow.
+        </p>
+        <div className="intro-repo-grid">
+          <div className="intro-repo-card">
+            <div className="intro-repo-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <h3>Works with your files</h3>
+            <p>Agents read and write directly to your codebase, understanding your project structure.</p>
+          </div>
+          <div className="intro-repo-card">
+            <div className="intro-repo-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="6" y1="3" x2="6" y2="15"></line>
+                <circle cx="18" cy="6" r="3"></circle>
+                <circle cx="6" cy="18" r="3"></circle>
+                <path d="M18 9a9 9 0 0 1-9 9"></path>
+              </svg>
+            </div>
+            <h3>Git-aware workflows</h3>
+            <p>Changes are tracked, feature-flagged, and can be reverted with a single click.</p>
+          </div>
+          <div className="intro-repo-card">
+            <div className="intro-repo-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <h3>Your existing workflow</h3>
+            <p>No new tools to learn. Works alongside your editor, terminal, and version control.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="intro-trust-section">
+        <h2>Designed for trust</h2>
+        <p className="intro-trust-subtitle">
+          Autonomous agents are powerful, but they need supervision. Kanban-driven Agent gives you logs, review states, revert actions, and clear task ownership.
+        </p>
+        <div className="intro-trust-features">
+          <div className="intro-trust-feature">
+            <div className="intro-trust-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <span>Full execution logs</span>
+          </div>
+          <div className="intro-trust-feature">
+            <div className="intro-trust-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <span>Review states</span>
+          </div>
+          <div className="intro-trust-feature">
+            <div className="intro-trust-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+            </div>
+            <span>One-click revert</span>
+          </div>
+          <div className="intro-trust-feature">
+            <div className="intro-trust-feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <span>Clear ownership</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="intro-final-cta" id="get-started">
+        <div className="intro-final-cta-content">
+          <h2>Built for developers who want AI to work like a teammate — not a black box.</h2>
+          <p>Start using Kanban-driven Agent today. Create your first task below and watch the agent build it for you.</p>
+          <div className="intro-final-cta-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

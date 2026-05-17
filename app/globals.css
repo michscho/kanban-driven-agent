@@ -965,3 +965,679 @@ input, textarea { font: inherit; color: inherit; }
   font-size: 12px;
   white-space: pre-wrap;
 }
+
+/* ============================================= */
+/* Intro Page Styles                             */
+/* Feature flag: gestalte-mir-eine-intro-seite-kanban-driven-agent- */
+/* ============================================= */
+
+.intro-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+/* Hero Section */
+.intro-hero {
+  text-align: center;
+  padding: 80px 24px 60px;
+  background: linear-gradient(180deg, var(--gradient-start) 0%, var(--bg-body) 100%);
+  border-radius: 0 0 24px 24px;
+  margin: -24px -24px 0;
+  padding-left: calc(24px + 24px);
+  padding-right: calc(24px + 24px);
+}
+
+.intro-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.intro-hero-brand {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.intro-hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  margin: 0 0 16px;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--link-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.intro-hero-claim {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--link-color);
+  margin: 0 0 16px;
+  letter-spacing: 0.3px;
+}
+
+.intro-hero-subtitle {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-hero-cta {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.intro-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--btn-primary);
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.intro-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(44, 110, 242, 0.4);
+}
+
+.intro-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.intro-btn-secondary:hover {
+  background: var(--bg-card-inner);
+  border-color: var(--text-muted);
+}
+
+.intro-github-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Claim Banner */
+.intro-claim-banner {
+  text-align: center;
+  padding: 40px 24px;
+  margin: 48px 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+}
+
+.intro-claim-banner p {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  font-style: italic;
+  letter-spacing: 0.2px;
+}
+
+/* Features Grid */
+.intro-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+.intro-feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 28px 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.intro-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.intro-feature-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(44, 110, 242, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.intro-feature-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--link-color);
+}
+
+.intro-feature-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--text-primary);
+}
+
+.intro-feature-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Demo Section */
+.intro-demo-section {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.intro-demo-section h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--text-primary);
+}
+
+.intro-demo-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-demo-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .intro-demo-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .intro-demo-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+.intro-demo-column {
+  background: var(--bg-card-inner);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 140px;
+}
+
+.intro-demo-column-header {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.intro-demo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.intro-demo-card-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.intro-demo-card-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: ui-monospace, monospace;
+}
+
+.intro-demo-card-active {
+  border-left: 3px solid var(--link-color);
+}
+
+.intro-demo-card-active .intro-demo-card-progress {
+  margin-top: 8px;
+  height: 3px;
+  background: var(--bg-card-inner);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.intro-demo-card-active .intro-demo-card-progress::after {
+  content: '';
+  display: block;
+  width: 60%;
+  height: 100%;
+  background: var(--link-color);
+  animation: introProgress 2s ease-in-out infinite;
+}
+
+@keyframes introProgress {
+  0%, 100% { width: 30%; }
+  50% { width: 70%; }
+}
+
+.intro-demo-card-review {
+  border-left: 3px solid var(--btn-warning-border);
+}
+
+.intro-demo-card-shipped {
+  border-left: 3px solid #4ade80;
+}
+
+/* How It Works Section */
+.intro-how-section {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.intro-how-section h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--text-primary);
+}
+
+.intro-how-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 40px;
+}
+
+.intro-how-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.intro-how-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  width: 200px;
+}
+
+.intro-how-step-number {
+  width: 40px;
+  height: 40px;
+  background: var(--btn-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+
+.intro-how-step-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.intro-how-step-content p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.intro-how-arrow {
+  color: var(--text-muted);
+}
+
+.intro-how-arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 900px) {
+  .intro-how-arrow {
+    transform: rotate(90deg);
+  }
+  .intro-how-steps {
+    flex-direction: column;
+  }
+  .intro-how-step {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* Local-First Section */
+.intro-local-section {
+  background: linear-gradient(135deg, rgba(44, 110, 242, 0.1) 0%, rgba(44, 110, 242, 0.05) 100%);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 60px 40px;
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.intro-local-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.intro-local-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--btn-primary);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.intro-local-icon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.intro-local-section h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.intro-local-tagline {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--link-color);
+  margin: 0 0 16px;
+}
+
+.intro-local-desc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+}
+
+.intro-local-features {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.intro-local-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.intro-local-feature svg {
+  width: 20px;
+  height: 20px;
+  color: #4ade80;
+}
+
+/* Repo Extension Section */
+.intro-repo-section {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.intro-repo-section h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--text-primary);
+}
+
+.intro-repo-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-repo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.intro-repo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: left;
+}
+
+.intro-repo-card-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(74, 222, 128, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.intro-repo-card-icon svg {
+  width: 24px;
+  height: 24px;
+  color: #4ade80;
+}
+
+.intro-repo-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--text-primary);
+}
+
+.intro-repo-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Trust Section */
+.intro-trust-section {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.intro-trust-section h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--text-primary);
+}
+
+.intro-trust-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-trust-features {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.intro-trust-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.intro-trust-feature-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-trust-feature-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--link-color);
+}
+
+.intro-trust-feature span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Final CTA Section */
+.intro-final-cta {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 60px 40px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.intro-final-cta-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.intro-final-cta h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.intro-final-cta p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+}
+
+.intro-final-cta-arrow {
+  color: var(--link-color);
+  animation: bounceDown 1.5s ease-in-out infinite;
+}
+
+.intro-final-cta-arrow svg {
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* Responsive adjustments for intro page */
+@media (max-width: 768px) {
+  .intro-hero {
+    padding: 60px 16px 48px;
+  }
+
+  .intro-hero-title {
+    font-size: 32px;
+  }
+
+  .intro-hero-claim {
+    font-size: 16px;
+  }
+
+  .intro-hero-subtitle {
+    font-size: 15px;
+  }
+
+  .intro-claim-banner p {
+    font-size: 18px;
+  }
+
+  .intro-demo-section h2,
+  .intro-how-section h2,
+  .intro-local-section h2,
+  .intro-repo-section h2,
+  .intro-trust-section h2 {
+    font-size: 24px;
+  }
+
+  .intro-local-section {
+    padding: 40px 24px;
+  }
+
+  .intro-final-cta {
+    padding: 40px 24px;
+  }
+
+  .intro-final-cta h2 {
+    font-size: 22px;
+  }
+}
