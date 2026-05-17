@@ -1247,12 +1247,9 @@ function ThemeToggle() {
   );
 }
 
-// GitHub Link Component with correct URL (Feature: github-link-ist-https-github-com-michscho-kanban-d)
+// GitHub Link Component
 function GitHubLink({ className }: { className?: string }) {
-  const hasCorrectLink = useFeature('github-link-ist-https-github-com-michscho-kanban-d');
-  const githubUrl = hasCorrectLink
-    ? 'https://github.com/michscho/kanban-driven-agent'
-    : 'https://github.com';
+  const githubUrl = 'https://github.com/michscho/kanban-driven-agent';
 
   return (
     <a href={githubUrl} target="_blank" rel="noopener noreferrer" className={className}>
