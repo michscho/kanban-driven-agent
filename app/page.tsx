@@ -21,7 +21,6 @@ export default function Home() {
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
   const [minimized, setMinimized] = useState(false);
   const floatingBtnBottomRight = useFeature('packe-bitte-das-verkleinerte-kreis-icon-beim-entfe');
-  const hasTopSpacing = useFeature('bitte-den-kanban-driven-agent-abstand-nach-oben-ge');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -128,7 +127,7 @@ export default function Home() {
 
   return (
     <div className="app">
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''}${hasTopSpacing ? ' todo-floating-top-spacing' : ''}`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing`}>
         {todoInterface}
       </div>
 
