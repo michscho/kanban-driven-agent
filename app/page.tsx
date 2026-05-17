@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -39,8 +38,6 @@ export default function Home() {
   const [minimized, setMinimized] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  // Feature flag for transparent Kanban board
-  const transparentModeEnabled = useFeature('mache-den-kanban-driven-agent-ein-wenig-transparen');
   const windowWidth = useWindowWidth();
   const isMobileView = windowWidth !== null && windowWidth < 768;
 
@@ -187,7 +184,7 @@ export default function Home() {
 
   return (
     <div className="app">
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing${transparentModeEnabled ? ' todo-floating-transparent' : ''}`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing todo-floating-transparent`}>
         {todoInterface}
       </div>
 
