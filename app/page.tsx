@@ -49,6 +49,8 @@ export default function Home() {
   const improvedRevertErrorHandling = useFeature('revert-funktioniert-z-b-f-r-24-your-ai-agent-your-');
   // Feature flag: when active, show settings button above/before the Agent branding
   const settingsAboveAgent = useFeature('einstellung-button-sollte-ber-den-agent-angezeigt-');
+  // Feature flag: when active, modals appear above the toolbar
+  const modalsAboveToolbar = useFeature('alle-modals-vom-kanban-driven-agent-sollten-ber-de');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -208,12 +210,13 @@ export default function Home() {
           onOpenLog={setOpenLog}
           onRequestChanges={handleRequestChanges}
         />
-        {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} />}
+        {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} aboveToolbar={modalsAboveToolbar} />}
         {feedbackTodo && (
           <FeedbackModal
             todo={feedbackTodo}
             onClose={() => setFeedbackTodo(null)}
             onSubmit={submitFeedback}
+            aboveToolbar={modalsAboveToolbar}
           />
         )}
       </div>
@@ -240,16 +243,17 @@ export default function Home() {
         </button>
       )}
 
-      {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} />}
+      {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} aboveToolbar={modalsAboveToolbar} />}
       {feedbackTodo && (
         <FeedbackModal
           todo={feedbackTodo}
           onClose={() => setFeedbackTodo(null)}
           onSubmit={submitFeedback}
+          aboveToolbar={modalsAboveToolbar}
         />
       )}
       {settingsOpen && (
-        <SettingsModal onClose={() => setSettingsOpen(false)} />
+        <SettingsModal onClose={() => setSettingsOpen(false)} aboveToolbar={modalsAboveToolbar} />
       )}
     </div>
   );
@@ -448,7 +452,7 @@ function Card({
   );
 }
 
-function LogModal({ id, onClose }: { id: number; onClose: () => void }) {
+function LogModal({ id, onClose, aboveToolbar }: { id: number; onClose: () => void; aboveToolbar?: boolean }) {
   const [log, setLog] = useState('(loading…)');
   const [status, setStatus] = useState<string>('');
   useEffect(() => {
@@ -465,7 +469,7 @@ function LogModal({ id, onClose }: { id: number; onClose: () => void }) {
     return () => { alive = false; clearInterval(iv); };
   }, [id]);
   return (
-    <div className="log-modal" onClick={onClose}>
+    <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
       <div className="inner" onClick={(e) => e.stopPropagation()}>
         <div className="head">
           <strong>Agent log — #{id} ({status})</strong>
@@ -481,10 +485,12 @@ function FeedbackModal({
   todo,
   onClose,
   onSubmit,
+  aboveToolbar,
 }: {
   todo: Todo;
   onClose: () => void;
   onSubmit: (feedback: string) => void;
+  aboveToolbar?: boolean;
 }) {
   const [feedback, setFeedback] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -500,7 +506,7 @@ function FeedbackModal({
   }
 
   return (
-    <div className="log-modal" onClick={onClose}>
+    <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
       <div className="inner feedback-modal" onClick={(e) => e.stopPropagation()}>
         <div className="head">
           <strong>Änderungen anfordern — #{todo.id}</strong>
@@ -1682,7 +1688,7 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
 }
 
 // Settings Modal Component (Feature: rechts-von-verkleinern-settings-button)
-function SettingsModal({ onClose }: { onClose: () => void }) {
+function SettingsModal({ onClose, aboveToolbar }: { onClose: () => void; aboveToolbar?: boolean }) {
   const [apiKey, setApiKey] = useState('');
   const [saved, setSaved] = useState(false);
 
@@ -1705,7 +1711,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="log-modal" onClick={onClose}>
+    <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
       <div className="inner settings-modal" onClick={(e) => e.stopPropagation()}>
         <div className="head">
           <strong>Einstellungen</strong>

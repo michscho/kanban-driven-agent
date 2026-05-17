@@ -2763,3 +2763,12 @@ input, textarea { font: inherit; color: inherit; }
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ============================================= */
+/* Modal Above Toolbar Styles                     */
+/* Feature flag: alle-modals-vom-kanban-driven-agent-sollten-ber-de */
+/* ============================================= */
+
+.log-modal.modal-above-toolbar {
+  z-index: 2000;
+}
