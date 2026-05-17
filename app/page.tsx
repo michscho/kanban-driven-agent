@@ -19,7 +19,6 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
-  const hasUserInputFeature = useFeature('bei-nderugen-beim-review-prozess-bitte-input-vom-n');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -62,11 +61,7 @@ export default function Home() {
   }
 
   function handleRequestChanges(todo: Todo) {
-    if (hasUserInputFeature) {
-      setFeedbackTodo(todo);
-    } else {
-      action(todo.id, 'run');
-    }
+    setFeedbackTodo(todo);
   }
 
   async function submitFeedback(feedback: string) {
