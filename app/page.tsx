@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -860,14 +859,12 @@ function HeaderBrand() {
 }
 
 // Smart Preview Link component that shows "Deactivate Preview" when feature is already active
-// Feature flag: preview-wenn-es-ge-ffnet-wird-steht-dann-deactivat
 function SmartPreviewLink({ slug }: { slug: string }) {
-  const smartPreviewEnabled = useFeature('preview-wenn-es-ge-ffnet-wird-steht-dann-deactivat');
   const searchParams = useSearchParams();
   const activeFeature = searchParams.get('feature');
   const isPreviewActive = activeFeature?.split(',').map(s => s.trim()).includes(slug);
 
-  if (smartPreviewEnabled && isPreviewActive) {
+  if (isPreviewActive) {
     return <a href="/">Deactivate Preview</a>;
   }
   return <a href={`/?feature=${slug}`}>Preview</a>;
