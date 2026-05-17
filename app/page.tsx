@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -19,7 +18,6 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
-  const floatingTodoBar = useFeature('diese-todo-leiste-soll-quasi-ber-der-application-s');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -123,13 +121,9 @@ export default function Home() {
     <div className="app">
       <LandingPage />
 
-      {floatingTodoBar ? (
-        <div className="todo-floating-container">
-          {todoInterface}
-        </div>
-      ) : (
-        todoInterface
-      )}
+      <div className="todo-floating-container">
+        {todoInterface}
+      </div>
 
       {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} />}
       {feedbackTodo && (
