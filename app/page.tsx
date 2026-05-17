@@ -1455,6 +1455,22 @@ function GitHubLink({ className }: { className?: string }) {
   );
 }
 
+// GitHub Pages Link Component (Feature: github-pages-release-auf-github)
+function GitHubPagesLink({ className }: { className?: string }) {
+  const githubPagesUrl = 'https://michscho.github.io/kanban-driven-agent';
+
+  return (
+    <a href={githubPagesUrl} target="_blank" rel="noopener noreferrer" className={`github-pages-link ${className || ''}`}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+      GitHub Pages
+    </a>
+  );
+}
+
 // Enhanced Intro Page V2 - Feature: wir-bauen-eine-bessere-intro-section-ein-bild-von-
 function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
   const [boardExpanded, setBoardExpanded] = useState(false);
@@ -1484,6 +1500,9 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
               Try it out
             </button>
             <GitHubLink className="intro-v2-cta-secondary" />
+            <Feature flag="github-pages-release-auf-github">
+              <GitHubPagesLink className="intro-v2-cta-secondary" />
+            </Feature>
           </div>
           <div className="intro-v2-clone-now">
             <span className="intro-v2-clone-label">Clone now:</span>
@@ -1825,6 +1844,68 @@ function SettingsModal({ onClose, aboveToolbar }: { onClose: () => void; aboveTo
             </ul>
           </section>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Question Modal Component - for asking questions about the repo
+// Feature flag: erm-gliche-es-eine-frage-zu-stellen-wo-ich-eine-an
+function QuestionModal({
+  onClose,
+  onSubmit,
+  aboveToolbar,
+}: {
+  onClose: () => void;
+  onSubmit: (question: string) => void;
+  aboveToolbar?: boolean;
+}) {
+  const [question, setQuestion] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!question.trim()) return;
+    setSubmitting(true);
+    try {
+      await onSubmit(question);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
+      <div className="inner question-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="head">
+          <strong>Frage zum Repository stellen</strong>
+          <button onClick={onClose}>Abbrechen</button>
+        </div>
+        <form onSubmit={handleSubmit} className="question-form">
+          <p className="question-info">
+            Stelle eine Frage über dieses Repository. Der Agent wird die Codebase durchsuchen und dir eine hilfreiche Antwort geben.
+          </p>
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="z.B. Wie funktioniert das Feature-Flag-System? Welche Komponenten gibt es? Wie wird die Datenbank verwendet?"
+            rows={4}
+            autoFocus
+            required
+          />
+          <div className="question-examples">
+            <span className="question-examples-label">Beispiele:</span>
+            <button type="button" onClick={() => setQuestion('Wie ist die Projektstruktur aufgebaut?')}>Projektstruktur</button>
+            <button type="button" onClick={() => setQuestion('Welche API-Endpunkte gibt es?')}>API-Endpunkte</button>
+            <button type="button" onClick={() => setQuestion('Wie funktioniert das Feature-Flag-System?')}>Feature-Flags</button>
+          </div>
+          <div className="question-actions">
+            <button type="button" onClick={onClose}>Abbrechen</button>
+            <button type="submit" className="primary" disabled={submitting || !question.trim()}>
+              {submitting ? 'Wird gesendet…' : 'Frage stellen'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
