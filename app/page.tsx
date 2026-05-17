@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
-import { Feature, useFeature } from '@/lib/features';
+import { Feature } from '@/lib/features';
 import { Logo } from '@/components/Logo';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
@@ -189,19 +189,13 @@ function LogModal({ id, onClose }: { id: number; onClose: () => void }) {
 }
 
 function LandingPage() {
-  const hasBetterBranding = useFeature('besseres-branding');
-
   return (
     <div className="landing-page">
       <div className="landing-hero">
-        {hasBetterBranding ? (
-          <div className="landing-hero-brand">
-            <Logo size={56} />
-            <h1>kanban-driven-agent</h1>
-          </div>
-        ) : (
-          <h1>🚀 kanban-driven-agent</h1>
-        )}
+        <div className="landing-hero-brand">
+          <Logo size={56} />
+          <h1>kanban-driven-agent</h1>
+        </div>
         <p className="landing-tagline">
           Ein selbstständiges Kanban-Board, bei dem Claude (via Agent SDK) deine Todos implementiert –
           geschützt hinter URL-Feature-Flags.
@@ -269,16 +263,10 @@ if (useFeature('my-flag')) {
 }
 
 function HeaderBrand() {
-  const hasBetterBranding = useFeature('besseres-branding');
-
-  if (hasBetterBranding) {
-    return (
-      <div className="header-brand">
-        <Logo />
-        <h1>kanban-driven-agent</h1>
-      </div>
-    );
-  }
-
-  return <h1>kanban-driven-agent</h1>;
+  return (
+    <div className="header-brand">
+      <Logo />
+      <h1>kanban-driven-agent</h1>
+    </div>
+  );
 }
