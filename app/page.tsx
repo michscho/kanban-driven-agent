@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { useFeature, Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -18,6 +19,8 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
+  const [minimized, setMinimized] = useState(false);
+  const canMinimize = useFeature('kanban-driven-agent-kann-mittels-button-verkleiner');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -83,6 +86,13 @@ export default function Home() {
         <div className="header-right">
           <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
           <ThemeToggle />
+          {canMinimize && (
+            <button className="minimize-btn" onClick={() => setMinimized(true)} title="Minimieren">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
@@ -121,9 +131,20 @@ export default function Home() {
     <div className="app">
       <LandingPage />
 
-      <div className="todo-floating-container">
+      <div className={`todo-floating-container ${canMinimize && minimized ? 'minimized' : ''}`}>
         {todoInterface}
       </div>
+
+      {/* Minimized floating logo button */}
+      {canMinimize && minimized && (
+        <button
+          className="floating-logo-btn"
+          onClick={() => setMinimized(false)}
+          title="Kanban Board öffnen"
+        >
+          <Logo size={32} />
+        </button>
+      )}
 
       {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} />}
       {feedbackTodo && (
