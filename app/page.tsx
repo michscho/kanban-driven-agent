@@ -45,6 +45,8 @@ export default function Home() {
 
   // Feature flag: when active, remove transparency from the board
   const removeTransparency = useFeature('kanban-nicht-alles-ist-transparent');
+  // Feature flag: when active, close animation goes to bottom-right
+  const closeToBottomRight = useFeature('schlie-en-animation-sollte-nach-rechts-unten-gehen');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -108,6 +110,9 @@ export default function Home() {
       <div className="header">
         <HeaderBrand />
         <div className="header-right">
+          <Feature flag="change-counter-f-r-nderungen-w-re-super">
+            <ChangeCounter todos={todos} />
+          </Feature>
           <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
           <ThemeToggle />
           <button className="minimize-btn" onClick={() => setMinimized(true)} title="Minimieren">
@@ -192,7 +197,7 @@ export default function Home() {
       {/* Intro Page */}
       <IntroPageV2 onTryItOut={() => setMinimized(false)} />
 
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} intro-v2-board todo-floating-top-spacing ${removeTransparency ? '' : 'todo-floating-transparent'} todo-always-floating`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} intro-v2-board todo-floating-top-spacing ${removeTransparency ? '' : 'todo-floating-transparent'} todo-always-floating ${closeToBottomRight ? 'todo-close-bottom-right' : ''}`}>
         {todoInterface}
       </div>
 
