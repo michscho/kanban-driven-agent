@@ -1860,6 +1860,21 @@ input, textarea { font: inherit; color: inherit; }
   border-color: var(--text-muted);
 }
 
+/* GitHub Pages Link (Feature: github-pages-release-auf-github) */
+.github-pages-link.intro-v2-cta-secondary {
+  background: linear-gradient(135deg, rgba(34, 139, 34, 0.15) 0%, rgba(46, 125, 50, 0.1) 100%);
+  border-color: rgba(34, 139, 34, 0.4);
+}
+
+.github-pages-link.intro-v2-cta-secondary:hover {
+  background: linear-gradient(135deg, rgba(34, 139, 34, 0.25) 0%, rgba(46, 125, 50, 0.2) 100%);
+  border-color: rgba(34, 139, 34, 0.6);
+}
+
+.github-pages-link svg {
+  color: #22c55e;
+}
+
 /* V2 Clone Now */
 .intro-v2-clone-now {
   display: flex;
