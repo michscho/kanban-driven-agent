@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { Feature, useFeature } from '@/lib/features';
+import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -119,9 +119,7 @@ export default function Home() {
       <div className="header">
         <HeaderBrand />
         <div className="header-right">
-          <Feature flag="change-counter-f-r-nderungen-w-re-super">
-            <ChangeCounter todos={todos} />
-          </Feature>
+          <ChangeCounter todos={todos} />
           <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
           <ThemeToggle />
           <button className="minimize-btn" onClick={() => setMinimized(true)} title="Minimieren">
