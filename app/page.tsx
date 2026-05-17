@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -19,7 +18,6 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
-  const hasUmbennenung = useFeature('umbennenung');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -32,12 +30,10 @@ export default function Home() {
     return () => clearInterval(iv);
   }, [refresh]);
 
-  // Update document title when umbennenung feature is enabled
+  // Update document title
   useEffect(() => {
-    if (hasUmbennenung) {
-      document.title = 'Kanban driven Agent';
-    }
-  }, [hasUmbennenung]);
+    document.title = 'Kanban driven Agent';
+  }, []);
 
   async function create(e: React.FormEvent) {
     e.preventDefault();
@@ -161,11 +157,7 @@ function Card({
         )}
         {status === 'done' && (
           <>
-            {openInSamePage ? (
-              <a href={`/?feature=${slug}`}>Preview</a>
-            ) : (
-              <a href={`/?feature=${slug}`} target="_blank" rel="noreferrer">Preview ↗</a>
-            )}
+            <a href={`/?feature=${slug}`}>Preview</a>
             <button className="primary" onClick={() => onAction(id, 'approve')}>Approve</button>
             <button className="warning" onClick={() => onRequestChanges(todo)}>Änderungen</button>
             <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
@@ -277,13 +269,12 @@ function FeedbackModal({
 }
 
 function LandingPage() {
-  const hasUmbennenung = useFeature('umbennenung');
   return (
     <div className="landing-page">
       <div className="landing-hero">
         <div className="landing-hero-brand">
           <Logo size={56} />
-          <h1>{hasUmbennenung ? 'Kanban driven Agent' : 'kanban-driven-agent'}</h1>
+          <h1>Kanban driven Agent</h1>
         </div>
         <p className="landing-tagline">
           Ein selbstständiges Kanban-Board, bei dem Claude (via Agent SDK) deine Todos implementiert –
@@ -352,11 +343,10 @@ if (useFeature('my-flag')) {
 }
 
 function HeaderBrand() {
-  const hasUmbennenung = useFeature('umbennenung');
   return (
     <div className="header-brand">
       <Logo />
-      <h1>{hasUmbennenung ? 'Kanban driven Agent' : 'kanban-driven-agent'}</h1>
+      <h1>Kanban driven Agent</h1>
     </div>
   );
 }
