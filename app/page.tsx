@@ -19,6 +19,7 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
+  const hasUmbennenung = useFeature('umbennenung');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -30,6 +31,13 @@ export default function Home() {
     const iv = setInterval(refresh, 2500);
     return () => clearInterval(iv);
   }, [refresh]);
+
+  // Update document title when umbennenung feature is enabled
+  useEffect(() => {
+    if (hasUmbennenung) {
+      document.title = 'Kanban driven Agent';
+    }
+  }, [hasUmbennenung]);
 
   async function create(e: React.FormEvent) {
     e.preventDefault();
@@ -80,9 +88,7 @@ export default function Home() {
         <HeaderBrand />
         <div className="header-right">
           <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
-          <Feature flag="oben-rechts-button-zum-switchen-von-dark-und-light">
-            <ThemeToggle />
-          </Feature>
+<ThemeToggle />
         </div>
       </div>
 
