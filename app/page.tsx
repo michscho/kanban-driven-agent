@@ -216,6 +216,9 @@ export default function Home() {
           onSubmit={submitFeedback}
         />
       )}
+      {settingsEnabled && settingsOpen && (
+        <SettingsModal onClose={() => setSettingsOpen(false)} />
+      )}
     </div>
   );
 }
@@ -885,5 +888,105 @@ function ThemeToggle() {
       )}
       {theme === 'dark' ? 'Light' : 'Dark'}
     </button>
+  );
+}
+
+// Settings Modal Component (Feature: rechts-von-verkleinern-settings-button)
+function SettingsModal({ onClose }: { onClose: () => void }) {
+  const [apiKey, setApiKey] = useState('');
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('claude-api-key');
+    if (stored) {
+      setApiKey(stored);
+    }
+  }, []);
+
+  function handleSave() {
+    localStorage.setItem('claude-api-key', apiKey);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  function handleClear() {
+    localStorage.removeItem('claude-api-key');
+    setApiKey('');
+  }
+
+  return (
+    <div className="log-modal" onClick={onClose}>
+      <div className="inner settings-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="head">
+          <strong>Einstellungen</strong>
+          <button onClick={onClose}>Schließen</button>
+        </div>
+        <div className="settings-content">
+          <section className="settings-section">
+            <h3>Claude API Key</h3>
+            <p className="settings-description">
+              Gib deinen Claude API Key ein, um den Kanban Agent zu nutzen.
+              Der Key wird lokal in deinem Browser gespeichert.
+            </p>
+            <div className="settings-input-group">
+              <input
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="sk-ant-api03-..."
+                className="settings-input"
+              />
+              <div className="settings-buttons">
+                <button onClick={handleSave} className="primary" disabled={!apiKey.trim()}>
+                  {saved ? 'Gespeichert!' : 'Speichern'}
+                </button>
+                {apiKey && (
+                  <button onClick={handleClear} className="danger">
+                    Löschen
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+
+          <section className="settings-section">
+            <h3>Anleitung</h3>
+            <div className="settings-instructions">
+              <ol>
+                <li>
+                  <strong>API Key besorgen:</strong> Gehe zu{' '}
+                  <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">
+                    console.anthropic.com
+                  </a>{' '}
+                  und erstelle einen neuen API Key.
+                </li>
+                <li>
+                  <strong>Key einfügen:</strong> Kopiere den Key und füge ihn oben ein.
+                </li>
+                <li>
+                  <strong>Todo erstellen:</strong> Erstelle ein neues Todo mit Titel und Beschreibung.
+                </li>
+                <li>
+                  <strong>Run klicken:</strong> Der Claude Agent implementiert dein Todo automatisch.
+                </li>
+                <li>
+                  <strong>Preview & Approve:</strong> Prüfe die Änderungen via{' '}
+                  <code>?feature=slug</code> und approven wenn zufrieden.
+                </li>
+              </ol>
+            </div>
+          </section>
+
+          <section className="settings-section">
+            <h3>Hinweise</h3>
+            <ul className="settings-notes">
+              <li>Der API Key wird nur lokal gespeichert und nie an unsere Server gesendet.</li>
+              <li>Alle Code-Änderungen sind hinter Feature-Flags geschützt.</li>
+              <li>Du kannst jederzeit Änderungen mit &quot;Revert&quot; rückgängig machen.</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
   );
 }
