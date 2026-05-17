@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { useFeature, Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -17,6 +18,8 @@ export default function Home() {
   const [desc, setDesc] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [openLog, setOpenLog] = useState<number | null>(null);
+  const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
+  const hasUserInputFeature = useFeature('bei-nderugen-beim-review-prozess-bitte-input-vom-n');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -58,6 +61,22 @@ export default function Home() {
     refresh();
   }
 
+  function handleRequestChanges(todo: Todo) {
+    if (hasUserInputFeature) {
+      setFeedbackTodo(todo);
+    } else {
+      action(todo.id, 'run');
+    }
+  }
+
+  async function submitFeedback(feedback: string) {
+    if (!feedbackTodo) return;
+    // For now, we just run the action - the feedback is logged
+    console.log(`Feedback for todo #${feedbackTodo.id}:`, feedback);
+    await action(feedbackTodo.id, 'run');
+    setFeedbackTodo(null);
+  }
+
   return (
     <div className="app">
       <LandingPage />
@@ -89,7 +108,7 @@ export default function Home() {
             <div key={col.key} className="col">
               <h2>{col.label}<span className="count">{items.length}</span></h2>
               {items.map((t) => (
-                <Card key={t.id} todo={t} onAction={action} onRemove={remove} onOpenLog={() => setOpenLog(t.id)} />
+                <Card key={t.id} todo={t} onAction={action} onRemove={remove} onOpenLog={() => setOpenLog(t.id)} onRequestChanges={handleRequestChanges} />
               ))}
             </div>
           );
@@ -97,6 +116,13 @@ export default function Home() {
       </div>
 
       {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} />}
+      {feedbackTodo && (
+        <FeedbackModal
+          todo={feedbackTodo}
+          onClose={() => setFeedbackTodo(null)}
+          onSubmit={submitFeedback}
+        />
+      )}
     </div>
   );
 }
@@ -106,11 +132,13 @@ function Card({
   onAction,
   onRemove,
   onOpenLog,
+  onRequestChanges,
 }: {
   todo: Todo;
   onAction: (id: number, path: string) => void;
   onRemove: (id: number) => void;
   onOpenLog: () => void;
+  onRequestChanges: (todo: Todo) => void;
 }) {
   const { status, slug, id } = todo;
   return (
@@ -129,7 +157,7 @@ function Card({
           <>
             <a href={`/?feature=${slug}`} target="_blank" rel="noreferrer">Preview ↗</a>
             <button className="primary" onClick={() => onAction(id, 'approve')}>Approve</button>
-            <button className="warning" onClick={() => onAction(id, 'run')}>Änderungen</button>
+            <button className="warning" onClick={() => onRequestChanges(todo)}>Änderungen</button>
             <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
             <button onClick={onOpenLog}>Log</button>
           </>
@@ -180,6 +208,58 @@ function LogModal({ id, onClose }: { id: number; onClose: () => void }) {
           <button onClick={onClose}>Close</button>
         </div>
         <pre>{log}</pre>
+      </div>
+    </div>
+  );
+}
+
+function FeedbackModal({
+  todo,
+  onClose,
+  onSubmit,
+}: {
+  todo: Todo;
+  onClose: () => void;
+  onSubmit: (feedback: string) => void;
+}) {
+  const [feedback, setFeedback] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await onSubmit(feedback);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="log-modal" onClick={onClose}>
+      <div className="inner feedback-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="head">
+          <strong>Änderungen anfordern — #{todo.id}</strong>
+          <button onClick={onClose}>Abbrechen</button>
+        </div>
+        <form onSubmit={handleSubmit} className="feedback-form">
+          <p className="feedback-info">
+            Was soll geändert werden? Beschreibe die gewünschten Änderungen:
+          </p>
+          <textarea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            placeholder="z.B. Bitte füge einen Button hinzu, der die Farbe ändert..."
+            rows={5}
+            autoFocus
+          />
+          <div className="feedback-actions">
+            <button type="button" onClick={onClose}>Abbrechen</button>
+            <button type="submit" className="primary" disabled={submitting}>
+              {submitting ? 'Wird gesendet…' : 'Änderungen anfordern'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

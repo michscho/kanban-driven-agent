@@ -71,3 +71,16 @@ input, textarea { font: inherit; color: inherit; }
 
 .landing-hero-brand { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px; }
 .landing-hero-brand h1 { font-size: 32px; margin: 0; font-weight: 700; }
+
+/* Feedback Modal Styles */
+.feedback-modal { width: min(600px, 92vw); }
+.feedback-form { padding: 16px; }
+.feedback-info { margin: 0 0 12px; color: #b8bbc1; }
+.feedback-form textarea { width: 100%; background: #0e0f12; border: 1px solid #25272d; border-radius: 6px; padding: 10px 12px; resize: vertical; color: #e6e7ea; font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, sans-serif; }
+.feedback-form textarea:focus { outline: none; border-color: #2c6ef2; }
+.feedback-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.feedback-actions button { padding: 8px 16px; border-radius: 6px; border: 1px solid #25272d; background: #15171b; color: #e6e7ea; font-weight: 500; }
+.feedback-actions button:hover { background: #25272d; }
+.feedback-actions button.primary { background: #2c6ef2; border-color: #2c6ef2; }
+.feedback-actions button.primary:hover { background: #2557c4; }
+.feedback-actions button.primary:disabled { opacity: 0.6; cursor: not-allowed; }
