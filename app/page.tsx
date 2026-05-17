@@ -252,10 +252,11 @@ function FeedbackModal({
             placeholder="z.B. Bitte füge einen Button hinzu, der die Farbe ändert..."
             rows={5}
             autoFocus
+            required
           />
           <div className="feedback-actions">
             <button type="button" onClick={onClose}>Abbrechen</button>
-            <button type="submit" className="primary" disabled={submitting}>
+            <button type="submit" className="primary" disabled={submitting || !feedback.trim()}>
               {submitting ? 'Wird gesendet…' : 'Änderungen anfordern'}
             </button>
           </div>
