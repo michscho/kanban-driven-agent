@@ -302,3 +302,8 @@ input, textarea { font: inherit; color: inherit; }
   left: auto;
   right: 24px;
 }
+
+/* Feature: add top spacing to the Kanban driven Agent container */
+.todo-floating-container.todo-floating-top-spacing {
+  margin-top: 24px;
+}
