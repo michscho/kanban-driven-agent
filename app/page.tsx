@@ -43,8 +43,6 @@ export default function Home() {
   const windowWidth = useWindowWidth();
   const isMobileView = windowWidth !== null && windowWidth < 768;
 
-  // Feature flag: when active, remove transparency from the board
-  const removeTransparency = useFeature('kanban-nicht-alles-ist-transparent');
   // Close animation goes to bottom-right
   const closeToBottomRight = true;
   // Feature flag: when active, show error alerts when revert fails
@@ -208,7 +206,7 @@ export default function Home() {
       {/* Intro Page */}
       <IntroPageV2 onTryItOut={() => setMinimized(false)} />
 
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} intro-v2-board todo-floating-top-spacing ${removeTransparency ? '' : 'todo-floating-transparent'} todo-always-floating ${closeToBottomRight ? 'todo-close-bottom-right' : ''}`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} intro-v2-board todo-floating-top-spacing todo-always-floating ${closeToBottomRight ? 'todo-close-bottom-right' : ''}`}>
         {todoInterface}
       </div>
 
