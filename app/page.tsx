@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
+import { Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -59,6 +60,10 @@ export default function Home() {
 
   return (
     <div className="app">
+      <Feature flag="eine-startseite-bitte-zur-erkl-rung-dieses-repos">
+        <LandingPage />
+      </Feature>
+
       <div className="header">
         <h1>kanban-driven-agent</h1>
         <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
@@ -177,6 +182,77 @@ function LogModal({ id, onClose }: { id: number; onClose: () => void }) {
         </div>
         <pre>{log}</pre>
       </div>
+    </div>
+  );
+}
+
+function LandingPage() {
+  return (
+    <div className="landing-page">
+      <div className="landing-hero">
+        <h1>🚀 kanban-driven-agent</h1>
+        <p className="landing-tagline">
+          Ein selbstständiges Kanban-Board, bei dem Claude (via Agent SDK) deine Todos implementiert –
+          geschützt hinter URL-Feature-Flags.
+        </p>
+      </div>
+
+      <div className="landing-section">
+        <h2>🎯 Was ist das?</h2>
+        <p>
+          Dieses Projekt ist ein experimentelles Tool, das AI-gesteuerte Entwicklung mit Feature-Flags kombiniert.
+          Du erstellst eine Aufgabe (Todo), und ein Claude-Agent implementiert sie automatisch in diesem Repository.
+          Alle Änderungen werden hinter Feature-Flags versteckt, sodass du sie sicher testen kannst,
+          bevor sie endgültig übernommen werden.
+        </p>
+      </div>
+
+      <div className="landing-section">
+        <h2>⚙️ Wie funktioniert es?</h2>
+        <ol className="landing-steps">
+          <li>
+            <strong>Todo erstellen:</strong> Gib einen Titel und eine Beschreibung ein.
+            Ein Slug wird automatisch generiert (z.B. <code>add-dark-mode</code>).
+          </li>
+          <li>
+            <strong>Run klicken:</strong> Der Claude Agent SDK arbeitet am Repo und erstellt
+            Code hinter <code>useFeature(&apos;slug&apos;)</code> oder <code>&lt;Feature flag=&quot;slug&quot;&gt;</code>.
+          </li>
+          <li>
+            <strong>Vorschau:</strong> Besuche <code>?feature=slug</code>, um die Änderungen zu sehen.
+          </li>
+          <li>
+            <strong>Approve:</strong> Ein zweiter Agent-Lauf entfernt die Flag-Conditionals – die Funktion ist live!
+          </li>
+          <li>
+            <strong>Revert:</strong> Falls etwas schiefgeht, <code>git revert</code> macht alles rückgängig.
+          </li>
+        </ol>
+      </div>
+
+      <div className="landing-section">
+        <h2>🛠️ Feature-Flags verwenden</h2>
+        <pre className="landing-code">{`import { useFeature, Feature } from '@/lib/features';
+
+// Für Logik
+if (useFeature('my-flag')) {
+  // neuer Code hier
+}
+
+// Für UI-Blöcke
+<Feature flag="my-flag">
+  <NeueKomponente />
+</Feature>`}</pre>
+      </div>
+
+      <div className="landing-section">
+        <h2>🚀 Los geht&apos;s!</h2>
+        <p>
+          Erstelle dein erstes Todo im Formular unten und beobachte, wie Claude es für dich implementiert.
+        </p>
+      </div>
+
+      <hr className="landing-divider" />
     </div>
   );
 }

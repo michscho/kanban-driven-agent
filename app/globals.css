@@ -35,3 +35,17 @@ input, textarea { font: inherit; color: inherit; }
 .log-modal .inner { background: #15171b; border: 1px solid #25272d; border-radius: 8px; width: min(900px, 92vw); max-height: 80vh; display: flex; flex-direction: column; }
 .log-modal .head { padding: 12px 16px; border-bottom: 1px solid #25272d; display: flex; justify-content: space-between; align-items: center; }
 .log-modal pre { margin: 0; padding: 16px; overflow: auto; flex: 1; font: 12px/1.4 ui-monospace, monospace; color: #c9ccd1; white-space: pre-wrap; word-break: break-word; }
+
+/* Landing Page Styles */
+.landing-page { margin-bottom: 32px; }
+.landing-hero { text-align: center; padding: 40px 20px 32px; background: linear-gradient(135deg, #1c1f25 0%, #15171b 100%); border-radius: 12px; border: 1px solid #2a2d35; margin-bottom: 24px; }
+.landing-hero h1 { font-size: 32px; margin: 0 0 12px; font-weight: 700; }
+.landing-tagline { font-size: 16px; color: #b8bbc1; margin: 0; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+.landing-section { background: #15171b; border: 1px solid #25272d; border-radius: 8px; padding: 20px 24px; margin-bottom: 16px; }
+.landing-section h2 { font-size: 18px; margin: 0 0 12px; font-weight: 600; color: #e6e7ea; }
+.landing-section p { margin: 0; color: #b8bbc1; line-height: 1.6; }
+.landing-steps { margin: 0; padding-left: 20px; color: #b8bbc1; line-height: 1.8; }
+.landing-steps li { margin-bottom: 8px; }
+.landing-steps code { background: #0e0f12; border: 1px solid #25272d; padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 12px; color: #7cb6ff; }
+.landing-code { background: #0e0f12; border: 1px solid #25272d; border-radius: 6px; padding: 16px; margin: 12px 0 0; font-family: ui-monospace, monospace; font-size: 13px; color: #c9ccd1; overflow-x: auto; white-space: pre; line-height: 1.5; }
+.landing-divider { border: none; border-top: 1px solid #25272d; margin: 24px 0; }
