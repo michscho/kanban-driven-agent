@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -186,10 +185,8 @@ export default function Home() {
 
   return (
     <div className="app">
-      {/* Feature-flagged Intro Page */}
-      <Feature flag="gestalte-mir-eine-intro-seite-kanban-driven-agent-">
-        <IntroPage />
-      </Feature>
+      {/* Intro Page */}
+      <IntroPage />
 
       <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing todo-floating-transparent`}>
         {todoInterface}
@@ -493,7 +490,7 @@ if (useFeature('my-flag')) {
   );
 }
 
-// Full Intro Page Component (Feature flag: gestalte-mir-eine-intro-seite-kanban-driven-agent-)
+// Full Intro Page Component
 function IntroPage() {
   return (
     <div className="intro-page">
