@@ -83,7 +83,12 @@ export default function Home() {
 
       <div className="header">
         <HeaderBrand />
-        <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
+        <div className="header-right">
+          <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
+          <Feature flag="oben-rechts-button-zum-switchen-von-dark-und-light">
+            <ThemeToggle />
+          </Feature>
+        </div>
       </div>
 
       <form className="new-form" onSubmit={create}>
@@ -267,12 +272,13 @@ function FeedbackModal({
 }
 
 function LandingPage() {
+  const hasUmbennenung = useFeature('umbennenung');
   return (
     <div className="landing-page">
       <div className="landing-hero">
         <div className="landing-hero-brand">
           <Logo size={56} />
-          <h1>kanban-driven-agent</h1>
+          <h1>{hasUmbennenung ? 'Kanban driven Agent' : 'kanban-driven-agent'}</h1>
         </div>
         <p className="landing-tagline">
           Ein selbstständiges Kanban-Board, bei dem Claude (via Agent SDK) deine Todos implementiert –
@@ -341,10 +347,46 @@ if (useFeature('my-flag')) {
 }
 
 function HeaderBrand() {
+  const hasUmbennenung = useFeature('umbennenung');
   return (
     <div className="header-brand">
       <Logo />
-      <h1>kanban-driven-agent</h1>
+      <h1>{hasUmbennenung ? 'Kanban driven Agent' : 'kanban-driven-agent'}</h1>
     </div>
+  );
+}
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    // Check localStorage on mount
+    const stored = localStorage.getItem('theme');
+    if (stored === 'light' || stored === 'dark') {
+      setTheme(stored);
+      document.documentElement.setAttribute('data-theme', stored);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  return (
+    <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Zu Light Mode wechseln' : 'Zu Dark Mode wechseln'}>
+      {theme === 'dark' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+        </svg>
+      )}
+      {theme === 'dark' ? 'Light' : 'Dark'}
+    </button>
   );
 }
