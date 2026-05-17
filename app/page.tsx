@@ -1455,7 +1455,7 @@ function GitHubLink({ className }: { className?: string }) {
   );
 }
 
-// GitHub Pages Link Component (Feature: github-pages-release-auf-github)
+// GitHub Pages Link Component
 function GitHubPagesLink({ className }: { className?: string }) {
   const githubPagesUrl = 'https://michscho.github.io/kanban-driven-agent';
 
@@ -1500,9 +1500,7 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
               Try it out
             </button>
             <GitHubLink className="intro-v2-cta-secondary" />
-            <Feature flag="github-pages-release-auf-github">
-              <GitHubPagesLink className="intro-v2-cta-secondary" />
-            </Feature>
+            <GitHubPagesLink className="intro-v2-cta-secondary" />
           </div>
           <div className="intro-v2-clone-now">
             <span className="intro-v2-clone-label">Clone now:</span>

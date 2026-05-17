@@ -1860,7 +1860,7 @@ input, textarea { font: inherit; color: inherit; }
   border-color: var(--text-muted);
 }
 
-/* GitHub Pages Link (Feature: github-pages-release-auf-github) */
+/* GitHub Pages Link */
 .github-pages-link.intro-v2-cta-secondary {
   background: linear-gradient(135deg, rgba(34, 139, 34, 0.15) 0%, rgba(46, 125, 50, 0.1) 100%);
   border-color: rgba(34, 139, 34, 0.4);
