@@ -327,3 +327,410 @@ input, textarea { font: inherit; color: inherit; }
   border-color: var(--text-muted);
   color: var(--text-primary);
 }
+
+/* ============================================= */
+/* Mobile Mini View Styles                       */
+/* Feature flag: wenn-verkleinert-bitte-eine-seite-erstellen-mit-ei */
+/* ============================================= */
+
+.mobile-mini-view {
+  padding: 0;
+}
+
+.mobile-mini-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile Header */
+.mobile-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.mobile-header h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mobile-header .theme-toggle {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* Mobile Tabs */
+.mobile-tabs {
+  display: flex;
+  overflow-x: auto;
+  background: var(--bg-card-inner);
+  border-bottom: 1px solid var(--border-color);
+  gap: 2px;
+  padding: 4px 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-tab {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.mobile-tab:hover {
+  background: var(--count-bg);
+  color: var(--text-primary);
+}
+
+.mobile-tab.active {
+  background: var(--btn-primary);
+  color: white;
+}
+
+/* Mobile Content Area */
+.mobile-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* Mobile Overview Page */
+.mobile-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mobile-hero {
+  text-align: center;
+  padding: 24px 16px;
+  background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+  border-radius: 12px;
+  border: 1px solid var(--border-card);
+}
+
+.mobile-hero h2 {
+  margin: 12px 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.mobile-tagline {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Mini Board Preview */
+.mobile-board-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.mobile-board-preview h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mini-board {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.mini-column {
+  background: var(--bg-card-inner);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 8px;
+  min-height: 80px;
+}
+
+.mini-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.mini-count {
+  background: var(--count-bg);
+  color: var(--count-text);
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 9px;
+}
+
+.mini-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 10px;
+  display: flex;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mini-card:hover {
+  background: var(--count-bg);
+}
+
+.mini-card-id {
+  color: var(--text-muted);
+  font-family: ui-monospace, monospace;
+}
+
+.mini-card-title {
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mini-card-active {
+  border-left: 2px solid var(--link-color);
+}
+
+.mini-card-review {
+  border-left: 2px solid var(--btn-warning-border);
+}
+
+.mini-card-shipped {
+  border-left: 2px solid #4ade80;
+}
+
+.mini-card-more {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2px;
+}
+
+/* Mobile Quick Add Form */
+.mobile-quick-add {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.mobile-quick-add h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-form input,
+.mobile-form textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.mobile-form input:focus,
+.mobile-form textarea:focus {
+  outline: none;
+  border-color: var(--btn-primary);
+}
+
+.mobile-form button {
+  width: 100%;
+  background: var(--btn-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.mobile-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile Todo List */
+.mobile-todo-list h2 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.mobile-count {
+  background: var(--count-bg);
+  color: var(--count-text);
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.mobile-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+}
+
+.mobile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Mobile Card Full */
+.mobile-card-full {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.mobile-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.mobile-card-full .mobile-card-id {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--link-color);
+}
+
+.mobile-card-status {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--count-bg);
+  color: var(--text-muted);
+}
+
+.mobile-card-full .mobile-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.mobile-card-slug {
+  font-size: 11px;
+  font-family: ui-monospace, monospace;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.mobile-card-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+}
+
+.mobile-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mobile-card-actions button,
+.mobile-card-actions a {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card-inner);
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mobile-card-actions button:hover,
+.mobile-card-actions a:hover {
+  background: var(--count-bg);
+}
+
+.mobile-card-actions .primary {
+  background: var(--btn-primary);
+  border-color: var(--btn-primary);
+  color: white;
+}
+
+.mobile-card-actions .warning {
+  background: var(--btn-warning);
+  border-color: var(--btn-warning-border);
+  color: white;
+}
+
+.mobile-card-actions .danger {
+  background: var(--btn-danger);
+  border-color: var(--btn-danger-border);
+  color: white;
+}
+
+.mobile-card-error {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid var(--btn-danger-border);
+  border-radius: 6px;
+  color: var(--error-color);
+  font-size: 12px;
+  white-space: pre-wrap;
+}

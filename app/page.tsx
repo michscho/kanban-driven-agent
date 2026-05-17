@@ -5,6 +5,8 @@ import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
 import { useFeature, Feature } from '@/lib/features';
 
+const FEATURE_FLAG_SETTINGS = 'rechts-von-verkleinern-settings-button';
+
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
   { key: 'wip', label: 'In Progress', match: (s) => s === 'in_progress' || s === 'approving' },
@@ -37,6 +39,9 @@ export default function Home() {
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
   const [minimized, setMinimized] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const settingsEnabled = useFeature(FEATURE_FLAG_SETTINGS);
 
   // Feature flag for responsive mini-view
   const responsiveMiniViewEnabled = useFeature('wenn-verkleinert-bitte-eine-seite-erstellen-mit-ei');
@@ -112,6 +117,14 @@ export default function Home() {
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </button>
+          {settingsEnabled && (
+            <button className="settings-btn" onClick={() => setSettingsOpen(true)} title="Einstellungen">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
@@ -148,6 +161,35 @@ export default function Home() {
       </div>
     </>
   );
+
+  // Mobile mini-view when screen is narrow (feature flagged)
+  if (isMobileView) {
+    return (
+      <div className="app mobile-mini-view">
+        <MobileMiniView
+          todos={todos}
+          title={title}
+          desc={desc}
+          setTitle={setTitle}
+          setDesc={setDesc}
+          submitting={submitting}
+          onCreate={create}
+          onAction={action}
+          onRemove={remove}
+          onOpenLog={setOpenLog}
+          onRequestChanges={handleRequestChanges}
+        />
+        {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} />}
+        {feedbackTodo && (
+          <FeedbackModal
+            todo={feedbackTodo}
+            onClose={() => setFeedbackTodo(null)}
+            onSubmit={submitFeedback}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -196,9 +238,8 @@ function Column({
   onRequestChanges: (todo: Todo) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const showMoreEnabled = useFeature('bei-der-todo-spalte-ab-12-mehr-anzeigen-erlauben-s');
 
-  const shouldLimit = showMoreEnabled && items.length >= SHOW_MORE_THRESHOLD && !expanded;
+  const shouldLimit = items.length >= SHOW_MORE_THRESHOLD && !expanded;
   const displayedItems = shouldLimit ? items.slice(0, SHOW_MORE_THRESHOLD) : items;
   const hiddenCount = items.length - SHOW_MORE_THRESHOLD;
 
@@ -215,7 +256,7 @@ function Column({
           onRequestChanges={onRequestChanges}
         />
       ))}
-      {showMoreEnabled && items.length >= SHOW_MORE_THRESHOLD && (
+      {items.length >= SHOW_MORE_THRESHOLD && (
         <button
           className="show-more-btn"
           onClick={() => setExpanded(!expanded)}
@@ -442,6 +483,363 @@ if (useFeature('my-flag')) {
       </div>
 
       <hr className="landing-divider" />
+    </div>
+  );
+}
+
+// Mobile Mini View - shown when screen is narrow (feature flag: wenn-verkleinert-bitte-eine-seite-erstellen-mit-ei)
+function MobileMiniView({
+  todos,
+  title,
+  desc,
+  setTitle,
+  setDesc,
+  submitting,
+  onCreate,
+  onAction,
+  onRemove,
+  onOpenLog,
+  onRequestChanges,
+}: {
+  todos: Todo[];
+  title: string;
+  desc: string;
+  setTitle: (t: string) => void;
+  setDesc: (d: string) => void;
+  submitting: boolean;
+  onCreate: (e: React.FormEvent) => void;
+  onAction: (id: number, path: string) => void;
+  onRemove: (id: number) => void;
+  onOpenLog: (id: number) => void;
+  onRequestChanges: (todo: Todo) => void;
+}) {
+  const [activeTab, setActiveTab] = useState<'overview' | 'backlog' | 'progress' | 'review' | 'shipped'>('overview');
+
+  // Group todos by status
+  const backlogTodos = todos.filter(t => t.status === 'pending');
+  const progressTodos = todos.filter(t => t.status === 'in_progress' || t.status === 'approving');
+  const reviewTodos = todos.filter(t => t.status === 'done' || t.status === 'failed');
+  const shippedTodos = todos.filter(t => t.status === 'approved' || t.status === 'reverted');
+
+  return (
+    <div className="mobile-mini-container">
+      {/* Header */}
+      <div className="mobile-header">
+        <Logo size={28} />
+        <h1>Kanban driven Agent</h1>
+        <ThemeToggle />
+      </div>
+
+      {/* Tab navigation */}
+      <div className="mobile-tabs">
+        <button
+          className={`mobile-tab ${activeTab === 'overview' ? 'active' : ''}`}
+          onClick={() => setActiveTab('overview')}
+        >
+          Übersicht
+        </button>
+        <button
+          className={`mobile-tab ${activeTab === 'backlog' ? 'active' : ''}`}
+          onClick={() => setActiveTab('backlog')}
+        >
+          Backlog ({backlogTodos.length})
+        </button>
+        <button
+          className={`mobile-tab ${activeTab === 'progress' ? 'active' : ''}`}
+          onClick={() => setActiveTab('progress')}
+        >
+          In Progress ({progressTodos.length})
+        </button>
+        <button
+          className={`mobile-tab ${activeTab === 'review' ? 'active' : ''}`}
+          onClick={() => setActiveTab('review')}
+        >
+          Review ({reviewTodos.length})
+        </button>
+        <button
+          className={`mobile-tab ${activeTab === 'shipped' ? 'active' : ''}`}
+          onClick={() => setActiveTab('shipped')}
+        >
+          Shipped ({shippedTodos.length})
+        </button>
+      </div>
+
+      {/* Content area */}
+      <div className="mobile-content">
+        {activeTab === 'overview' && (
+          <div className="mobile-overview">
+            <div className="mobile-hero">
+              <Logo size={48} />
+              <h2>Baue deine Kanban driven Web App</h2>
+              <p className="mobile-tagline">
+                Ein selbstständiges Kanban-Board, bei dem Claude deine Todos implementiert.
+              </p>
+            </div>
+
+            {/* Mini Board Preview */}
+            <div className="mobile-board-preview">
+              <h3>Todo Board Vorschau</h3>
+              <div className="mini-board">
+                <div className="mini-column">
+                  <div className="mini-column-header">
+                    <span>Backlog</span>
+                    <span className="mini-count">{backlogTodos.length}</span>
+                  </div>
+                  <div className="mini-cards">
+                    {backlogTodos.slice(0, 3).map(t => (
+                      <div key={t.id} className="mini-card" onClick={() => setActiveTab('backlog')}>
+                        <span className="mini-card-id">#{t.id}</span>
+                        <span className="mini-card-title">{t.title.slice(0, 20)}{t.title.length > 20 ? '…' : ''}</span>
+                      </div>
+                    ))}
+                    {backlogTodos.length > 3 && (
+                      <div className="mini-card-more">+{backlogTodos.length - 3} mehr</div>
+                    )}
+                  </div>
+                </div>
+                <div className="mini-column">
+                  <div className="mini-column-header">
+                    <span>In Progress</span>
+                    <span className="mini-count">{progressTodos.length}</span>
+                  </div>
+                  <div className="mini-cards">
+                    {progressTodos.slice(0, 3).map(t => (
+                      <div key={t.id} className="mini-card mini-card-active" onClick={() => setActiveTab('progress')}>
+                        <span className="mini-card-id">#{t.id}</span>
+                        <span className="mini-card-title">{t.title.slice(0, 20)}{t.title.length > 20 ? '…' : ''}</span>
+                      </div>
+                    ))}
+                    {progressTodos.length > 3 && (
+                      <div className="mini-card-more">+{progressTodos.length - 3} mehr</div>
+                    )}
+                  </div>
+                </div>
+                <div className="mini-column">
+                  <div className="mini-column-header">
+                    <span>Review</span>
+                    <span className="mini-count">{reviewTodos.length}</span>
+                  </div>
+                  <div className="mini-cards">
+                    {reviewTodos.slice(0, 3).map(t => (
+                      <div key={t.id} className="mini-card mini-card-review" onClick={() => setActiveTab('review')}>
+                        <span className="mini-card-id">#{t.id}</span>
+                        <span className="mini-card-title">{t.title.slice(0, 20)}{t.title.length > 20 ? '…' : ''}</span>
+                      </div>
+                    ))}
+                    {reviewTodos.length > 3 && (
+                      <div className="mini-card-more">+{reviewTodos.length - 3} mehr</div>
+                    )}
+                  </div>
+                </div>
+                <div className="mini-column">
+                  <div className="mini-column-header">
+                    <span>Shipped</span>
+                    <span className="mini-count">{shippedTodos.length}</span>
+                  </div>
+                  <div className="mini-cards">
+                    {shippedTodos.slice(0, 3).map(t => (
+                      <div key={t.id} className="mini-card mini-card-shipped" onClick={() => setActiveTab('shipped')}>
+                        <span className="mini-card-id">#{t.id}</span>
+                        <span className="mini-card-title">{t.title.slice(0, 20)}{t.title.length > 20 ? '…' : ''}</span>
+                      </div>
+                    ))}
+                    {shippedTodos.length > 3 && (
+                      <div className="mini-card-more">+{shippedTodos.length - 3} mehr</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick add form */}
+            <div className="mobile-quick-add">
+              <h3>Neues Todo</h3>
+              <form className="mobile-form" onSubmit={onCreate}>
+                <input
+                  placeholder="Todo Titel…"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
+                <textarea
+                  placeholder="Beschreibung (optional)"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                  rows={2}
+                />
+                <button type="submit" disabled={submitting || !title.trim()}>
+                  Hinzufügen
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'backlog' && (
+          <MobileTodoList
+            title="Backlog"
+            todos={backlogTodos}
+            onAction={onAction}
+            onRemove={onRemove}
+            onOpenLog={onOpenLog}
+            onRequestChanges={onRequestChanges}
+            emptyMessage="Keine Todos im Backlog"
+          />
+        )}
+
+        {activeTab === 'progress' && (
+          <MobileTodoList
+            title="In Progress"
+            todos={progressTodos}
+            onAction={onAction}
+            onRemove={onRemove}
+            onOpenLog={onOpenLog}
+            onRequestChanges={onRequestChanges}
+            emptyMessage="Keine Todos in Bearbeitung"
+          />
+        )}
+
+        {activeTab === 'review' && (
+          <MobileTodoList
+            title="Review"
+            todos={reviewTodos}
+            onAction={onAction}
+            onRemove={onRemove}
+            onOpenLog={onOpenLog}
+            onRequestChanges={onRequestChanges}
+            emptyMessage="Keine Todos zur Überprüfung"
+          />
+        )}
+
+        {activeTab === 'shipped' && (
+          <MobileTodoList
+            title="Shipped"
+            todos={shippedTodos}
+            onAction={onAction}
+            onRemove={onRemove}
+            onOpenLog={onOpenLog}
+            onRequestChanges={onRequestChanges}
+            emptyMessage="Keine shipped Todos"
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Mobile Todo List component for the tabs
+function MobileTodoList({
+  title,
+  todos,
+  onAction,
+  onRemove,
+  onOpenLog,
+  onRequestChanges,
+  emptyMessage,
+}: {
+  title: string;
+  todos: Todo[];
+  onAction: (id: number, path: string) => void;
+  onRemove: (id: number) => void;
+  onOpenLog: (id: number) => void;
+  onRequestChanges: (todo: Todo) => void;
+  emptyMessage: string;
+}) {
+  return (
+    <div className="mobile-todo-list">
+      <h2>{title} <span className="mobile-count">{todos.length}</span></h2>
+      {todos.length === 0 ? (
+        <div className="mobile-empty">{emptyMessage}</div>
+      ) : (
+        <div className="mobile-cards">
+          {todos.map(todo => (
+            <MobileCard
+              key={todo.id}
+              todo={todo}
+              onAction={onAction}
+              onRemove={onRemove}
+              onOpenLog={() => onOpenLog(todo.id)}
+              onRequestChanges={onRequestChanges}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Mobile Card component
+function MobileCard({
+  todo,
+  onAction,
+  onRemove,
+  onOpenLog,
+  onRequestChanges,
+}: {
+  todo: Todo;
+  onAction: (id: number, path: string) => void;
+  onRemove: (id: number) => void;
+  onOpenLog: () => void;
+  onRequestChanges: (todo: Todo) => void;
+}) {
+  const { status, slug, id } = todo;
+  const MAX_DESC_LENGTH = 60;
+
+  const displayDescription = todo.description && todo.description.length > MAX_DESC_LENGTH
+    ? todo.description.slice(0, MAX_DESC_LENGTH) + '…'
+    : todo.description;
+
+  return (
+    <div className="mobile-card-full">
+      <div className="mobile-card-header">
+        <span className="mobile-card-id">#{id}</span>
+        <span className="mobile-card-status">{status}</span>
+      </div>
+      <div className="mobile-card-title">{todo.title}</div>
+      <div className="mobile-card-slug">flag: {slug}</div>
+      {todo.description && (
+        <div className="mobile-card-desc" title={todo.description}>{displayDescription}</div>
+      )}
+      <div className="mobile-card-actions">
+        {status === 'pending' && (
+          <>
+            <button className="primary" onClick={() => onAction(id, 'run')}>Run</button>
+            <button onClick={() => onRemove(id)}>Löschen</button>
+          </>
+        )}
+        {(status === 'in_progress' || status === 'approving') && (
+          <button onClick={onOpenLog}>Log anzeigen…</button>
+        )}
+        {status === 'done' && (
+          <>
+            <a href={`/?feature=${slug}`}>Preview</a>
+            <button className="primary" onClick={() => onAction(id, 'approve')}>Approve</button>
+            <button className="warning" onClick={() => onRequestChanges(todo)}>Ändern</button>
+            <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
+            <button onClick={onOpenLog}>Log</button>
+          </>
+        )}
+        {status === 'approved' && (
+          <>
+            <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
+            <button onClick={onOpenLog}>Log</button>
+          </>
+        )}
+        {status === 'failed' && (
+          <>
+            <button className="primary" onClick={() => onAction(id, 'run')}>Retry</button>
+            <button onClick={onOpenLog}>Log</button>
+            <button onClick={() => onRemove(id)}>Löschen</button>
+          </>
+        )}
+        {status === 'reverted' && (
+          <>
+            <button onClick={onOpenLog}>Log</button>
+            <button onClick={() => onRemove(id)}>Löschen</button>
+          </>
+        )}
+      </div>
+      {todo.error && <div className="mobile-card-error">{todo.error}</div>}
     </div>
   );
 }
