@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { Feature, useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -1288,6 +1289,14 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
             </button>
             <GitHubLink className="intro-v2-cta-secondary" />
           </div>
+          <Feature flag="f-ge-in-intro-hinzu-clone-now-https-github-com-mic">
+            <div className="intro-v2-clone-now">
+              <span className="intro-v2-clone-label">Clone now:</span>
+              <a href="https://github.com/michscho/kanban-driven-agent" target="_blank" rel="noopener noreferrer" className="intro-v2-clone-link">
+                https://github.com/michscho/kanban-driven-agent
+              </a>
+            </div>
+          </Feature>
         </div>
 
         {/* WebApp Mockup with Extension Overlay */}
