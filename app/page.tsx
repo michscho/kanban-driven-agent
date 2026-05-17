@@ -145,6 +145,7 @@ function Card({
   onOpenLog: () => void;
   onRequestChanges: (todo: Todo) => void;
 }) {
+  const openInSamePage = useFeature('feature-flags-bitte-auf-der-gleichen-seite-ffnen');
   const { status, slug, id } = todo;
   return (
     <div className="card">
@@ -160,7 +161,11 @@ function Card({
         )}
         {status === 'done' && (
           <>
-            <a href={`/?feature=${slug}`} target="_blank" rel="noreferrer">Preview ↗</a>
+            {openInSamePage ? (
+              <a href={`/?feature=${slug}`}>Preview</a>
+            ) : (
+              <a href={`/?feature=${slug}`} target="_blank" rel="noreferrer">Preview ↗</a>
+            )}
             <button className="primary" onClick={() => onAction(id, 'approve')}>Approve</button>
             <button className="warning" onClick={() => onRequestChanges(todo)}>Änderungen</button>
             <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
