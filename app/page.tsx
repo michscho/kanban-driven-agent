@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature, Feature } from '@/lib/features';
+import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -811,12 +811,10 @@ function IntroPage() {
         <div className="intro-final-cta-content">
           <h2>Built for developers who want AI to work like a teammate — not a black box.</h2>
           <p>Start using Kanban-driven Agent today. Create your first task below and watch the agent build it for you.</p>
-          <Feature flag="in-der-intro-section-f-ge-hinzu-git-clone-https-gi">
-            <div className="intro-git-clone">
-              <code>git clone https://github.com/michscho/kanban-driven-agent</code>
-              <p>and you&apos;re ready!</p>
-            </div>
-          </Feature>
+          <div className="intro-git-clone">
+            <code>git clone https://github.com/michscho/kanban-driven-agent</code>
+            <p>and you&apos;re ready!</p>
+          </div>
           <div className="intro-final-cta-arrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M19 12l-7 7-7-7"/>
@@ -1251,6 +1249,280 @@ function ThemeToggle() {
       )}
       {theme === 'dark' ? 'Light' : 'Dark'}
     </button>
+  );
+}
+
+// Enhanced Intro Page V2 - Feature: wir-bauen-eine-bessere-intro-section-ein-bild-von-
+function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
+  const [boardExpanded, setBoardExpanded] = useState(false);
+
+  return (
+    <div className="intro-v2">
+      {/* Hero Section with WebApp Mockup */}
+      <section className="intro-v2-hero">
+        <div className="intro-v2-hero-content">
+          <div className="intro-v2-badge">
+            <span className="intro-v2-badge-icon">✨</span>
+            <span>AI-Powered Development Workflow</span>
+          </div>
+          <h1 className="intro-v2-title">
+            Your AI Agent.<br />
+            <span className="intro-v2-title-highlight">Your Repository.</span>
+          </h1>
+          <p className="intro-v2-subtitle">
+            A Kanban-driven workflow where Claude autonomously implements your tasks —
+            running locally, with full visibility, and always under your control.
+          </p>
+          <div className="intro-v2-cta-group">
+            <button className="intro-v2-cta-primary" onClick={onTryItOut}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Try it out
+            </button>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="intro-v2-cta-secondary">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+
+        {/* WebApp Mockup with Extension Overlay */}
+        <div className="intro-v2-mockup">
+          <div className="intro-v2-mockup-window">
+            <div className="intro-v2-mockup-titlebar">
+              <div className="intro-v2-mockup-buttons">
+                <span className="intro-v2-mockup-btn red"></span>
+                <span className="intro-v2-mockup-btn yellow"></span>
+                <span className="intro-v2-mockup-btn green"></span>
+              </div>
+              <div className="intro-v2-mockup-url">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>localhost:3010</span>
+              </div>
+            </div>
+            <div className="intro-v2-mockup-content">
+              {/* Simulated WebApp Content */}
+              <div className="intro-v2-mockup-nav">
+                <div className="intro-v2-mockup-nav-logo"></div>
+                <div className="intro-v2-mockup-nav-items">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+              <div className="intro-v2-mockup-body">
+                <div className="intro-v2-mockup-sidebar">
+                  <div className="intro-v2-mockup-sidebar-item active"></div>
+                  <div className="intro-v2-mockup-sidebar-item"></div>
+                  <div className="intro-v2-mockup-sidebar-item"></div>
+                  <div className="intro-v2-mockup-sidebar-item"></div>
+                </div>
+                <div className="intro-v2-mockup-main">
+                  <div className="intro-v2-mockup-card"></div>
+                  <div className="intro-v2-mockup-card"></div>
+                  <div className="intro-v2-mockup-card small"></div>
+                </div>
+              </div>
+
+              {/* Extension Overlay */}
+              <div className="intro-v2-extension-overlay">
+                <div className="intro-v2-extension-header">
+                  <Logo size={20} />
+                  <span>Kanban driven Agent</span>
+                </div>
+                <div className="intro-v2-extension-mini-board">
+                  <div className="intro-v2-ext-col">
+                    <div className="intro-v2-ext-col-header">Backlog</div>
+                    <div className="intro-v2-ext-card"></div>
+                    <div className="intro-v2-ext-card"></div>
+                  </div>
+                  <div className="intro-v2-ext-col">
+                    <div className="intro-v2-ext-col-header">In Progress</div>
+                    <div className="intro-v2-ext-card active"></div>
+                  </div>
+                  <div className="intro-v2-ext-col">
+                    <div className="intro-v2-ext-col-header">Review</div>
+                    <div className="intro-v2-ext-card review"></div>
+                  </div>
+                  <div className="intro-v2-ext-col">
+                    <div className="intro-v2-ext-col-header">Shipped</div>
+                    <div className="intro-v2-ext-card done"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="intro-v2-mockup-glow"></div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="intro-v2-features">
+        <div className="intro-v2-feature-grid">
+          <div className="intro-v2-feature-card">
+            <div className="intro-v2-feature-icon own-data">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="M9 12l2 2 4-4"></path>
+              </svg>
+            </div>
+            <h3>Own your Data</h3>
+            <p>Run entirely locally. Your code, tasks, and agent logs never leave your machine. No cloud lock-in, no hidden data sharing.</p>
+          </div>
+
+          <div className="intro-v2-feature-card">
+            <div className="intro-v2-feature-icon repo-native">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                <path d="M9 18c-4.51 2-5-2-7-2"></path>
+              </svg>
+            </div>
+            <h3>Repo-Native</h3>
+            <p>Works directly in your repository. Agents read your code, write changes, and commit — just like a team member.</p>
+          </div>
+
+          <div className="intro-v2-feature-card">
+            <div className="intro-v2-feature-icon visible-changes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </div>
+            <h3>Visible Changes</h3>
+            <p>Every task flows through Backlog → In Progress → Review → Shipped. Full transparency on what the agent is building.</p>
+          </div>
+
+          <div className="intro-v2-feature-card">
+            <div className="intro-v2-feature-icon human-control">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3>Human In Control</h3>
+            <p>Preview changes behind feature flags, approve or reject, and revert with one click. You decide what ships.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Collapsible Demo Board */}
+      <section className="intro-v2-demo-section">
+        <button
+          className={`intro-v2-demo-toggle ${boardExpanded ? 'expanded' : ''}`}
+          onClick={() => setBoardExpanded(!boardExpanded)}
+        >
+          <div className="intro-v2-demo-toggle-content">
+            <Logo size={24} />
+            <span className="intro-v2-demo-toggle-text">See the Kanban Board in action</span>
+          </div>
+          <svg className="intro-v2-demo-toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div className={`intro-v2-demo-board-container ${boardExpanded ? 'expanded' : ''}`}>
+          <div className="intro-v2-demo-board">
+            <div className="intro-v2-demo-column">
+              <div className="intro-v2-demo-column-header">
+                <span>Backlog</span>
+                <span className="intro-v2-demo-count">3</span>
+              </div>
+              <div className="intro-v2-demo-card">
+                <div className="intro-v2-demo-card-id">#15</div>
+                <div className="intro-v2-demo-card-title">Add user authentication</div>
+                <div className="intro-v2-demo-card-status">pending</div>
+              </div>
+              <div className="intro-v2-demo-card">
+                <div className="intro-v2-demo-card-id">#16</div>
+                <div className="intro-v2-demo-card-title">Create dashboard layout</div>
+                <div className="intro-v2-demo-card-status">pending</div>
+              </div>
+              <div className="intro-v2-demo-card">
+                <div className="intro-v2-demo-card-id">#17</div>
+                <div className="intro-v2-demo-card-title">Implement dark mode</div>
+                <div className="intro-v2-demo-card-status">pending</div>
+              </div>
+            </div>
+            <div className="intro-v2-demo-column">
+              <div className="intro-v2-demo-column-header">
+                <span>In Progress</span>
+                <span className="intro-v2-demo-count">1</span>
+              </div>
+              <div className="intro-v2-demo-card active">
+                <div className="intro-v2-demo-card-id">#14</div>
+                <div className="intro-v2-demo-card-title">Build API endpoints</div>
+                <div className="intro-v2-demo-card-status">in_progress</div>
+                <div className="intro-v2-demo-card-progress">
+                  <div className="intro-v2-demo-progress-bar"></div>
+                </div>
+              </div>
+            </div>
+            <div className="intro-v2-demo-column">
+              <div className="intro-v2-demo-column-header">
+                <span>Review</span>
+                <span className="intro-v2-demo-count">2</span>
+              </div>
+              <div className="intro-v2-demo-card review">
+                <div className="intro-v2-demo-card-id">#12</div>
+                <div className="intro-v2-demo-card-title">Create login flow</div>
+                <div className="intro-v2-demo-card-status">done</div>
+                <div className="intro-v2-demo-card-actions">
+                  <span className="intro-v2-demo-btn preview">Preview</span>
+                  <span className="intro-v2-demo-btn approve">Approve</span>
+                </div>
+              </div>
+              <div className="intro-v2-demo-card review">
+                <div className="intro-v2-demo-card-id">#13</div>
+                <div className="intro-v2-demo-card-title">Add form validation</div>
+                <div className="intro-v2-demo-card-status">done</div>
+              </div>
+            </div>
+            <div className="intro-v2-demo-column">
+              <div className="intro-v2-demo-column-header">
+                <span>Shipped</span>
+                <span className="intro-v2-demo-count">2</span>
+              </div>
+              <div className="intro-v2-demo-card shipped">
+                <div className="intro-v2-demo-card-id">#10</div>
+                <div className="intro-v2-demo-card-title">Setup project structure</div>
+                <div className="intro-v2-demo-card-status">approved</div>
+              </div>
+              <div className="intro-v2-demo-card shipped">
+                <div className="intro-v2-demo-card-id">#11</div>
+                <div className="intro-v2-demo-card-title">Configure database</div>
+                <div className="intro-v2-demo-card-status">approved</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Try it out CTA */}
+      <section className="intro-v2-final-cta">
+        <div className="intro-v2-final-cta-content">
+          <h2>Ready to let AI handle the implementation?</h2>
+          <p>Create your first task below and watch Claude build it for you.</p>
+          <button className="intro-v2-cta-primary large" onClick={onTryItOut}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Create your first task
+          </button>
+          <div className="intro-v2-final-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 
