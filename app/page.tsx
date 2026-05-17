@@ -1278,9 +1278,6 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
             <span>AI-Powered Development Workflow</span>
           </div>
           <h1 className="intro-v2-title">
-            <Feature flag="your-ai-agent-your-repository-packe-noch-your-kanb">
-              Your Kanban.<br />
-            </Feature>
             Your AI Agent.<br />
             <span className="intro-v2-title-highlight">Your Repository.</span>
           </h1>

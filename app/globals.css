@@ -2443,3 +2443,47 @@ input, textarea { font: inherit; color: inherit; }
 .intro-v2-board {
   margin-top: 0;
 }
+
+/* ============================================= */
+/* Always Floating Kanban Board Styles          */
+/* Feature flag: das-kanban-board-sollte-immer-floating-sein-ber-de */
+/* ============================================= */
+
+.todo-floating-container.todo-always-floating {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 1400px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 0;
+}
+
+/* Minimized state for always-floating mode */
+.todo-floating-container.todo-always-floating.minimized {
+  transform: translateX(-50%) translateY(-120%) scale(0.1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Scrollbar styling for always-floating container */
+.todo-floating-container.todo-always-floating::-webkit-scrollbar {
+  width: 8px;
+}
+
+.todo-floating-container.todo-always-floating::-webkit-scrollbar-track {
+  background: var(--bg-card-inner);
+  border-radius: 4px;
+}
+
+.todo-floating-container.todo-always-floating::-webkit-scrollbar-thumb {
+  background: var(--border-card);
+  border-radius: 4px;
+}
+
+.todo-floating-container.todo-always-floating::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
