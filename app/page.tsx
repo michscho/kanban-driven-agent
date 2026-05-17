@@ -493,7 +493,6 @@ function Card({
 function LogModal({ id, onClose, aboveToolbar }: { id: number; onClose: () => void; aboveToolbar?: boolean }) {
   const [log, setLog] = useState('(loading…)');
   const [status, setStatus] = useState<string>('');
-  const smartLogs = useFeature('gliedere-die-agent-logs-noch-schlauer-um-besseren-');
 
   useEffect(() => {
     let alive = true;
@@ -509,36 +508,20 @@ function LogModal({ id, onClose, aboveToolbar }: { id: number; onClose: () => vo
     return () => { alive = false; clearInterval(iv); };
   }, [id]);
 
-  // Use smart log view when feature flag is active
-  if (smartLogs) {
-    return (
-      <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
-        <div className="inner smart-log-inner" onClick={(e) => e.stopPropagation()}>
-          <div className="head">
-            <strong>Agent log — #{id} ({status})</strong>
-            <button onClick={onClose}>Close</button>
-          </div>
-          <SmartLogView log={log} status={status} />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
-      <div className="inner" onClick={(e) => e.stopPropagation()}>
+      <div className="inner smart-log-inner" onClick={(e) => e.stopPropagation()}>
         <div className="head">
           <strong>Agent log — #{id} ({status})</strong>
           <button onClick={onClose}>Close</button>
         </div>
-        <pre>{log}</pre>
+        <SmartLogView log={log} status={status} />
       </div>
     </div>
   );
 }
 
 // Smart Log View - parses and displays agent logs in a structured way
-// Feature flag: gliedere-die-agent-logs-noch-schlauer-um-besseren-
 interface LogEntry {
   type: 'system' | 'tool' | 'tool_result' | 'result' | 'text' | 'harness';
   content: string;
