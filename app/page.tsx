@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -277,14 +278,20 @@ function Card({
 }) {
   const { status, slug, id } = todo;
   const MAX_DESC_LENGTH = 100;
+  const MAX_TITLE_LENGTH = 50;
+  const truncateTitleEnabled = useFeature('wenn-der-titel-zu-lang-wird-bitte-ebenfalls-abschn');
 
   const displayDescription = todo.description && todo.description.length > MAX_DESC_LENGTH
     ? todo.description.slice(0, MAX_DESC_LENGTH) + '…'
     : todo.description;
 
+  const displayTitle = truncateTitleEnabled && todo.title.length > MAX_TITLE_LENGTH
+    ? todo.title.slice(0, MAX_TITLE_LENGTH) + '…'
+    : todo.title;
+
   return (
     <div className="card">
-      <div className="title">#{id} {todo.title}</div>
+      <div className="title" title={truncateTitleEnabled && todo.title.length > MAX_TITLE_LENGTH ? todo.title : undefined}>#{id} {displayTitle}</div>
       <div className="slug">flag: {slug} · {status}</div>
       {todo.description && <div className="desc" title={todo.description}>{displayDescription}</div>}
       <div className="actions">
@@ -778,10 +785,16 @@ function MobileCard({
 }) {
   const { status, slug, id } = todo;
   const MAX_DESC_LENGTH = 60;
+  const MAX_TITLE_LENGTH = 40;
+  const truncateTitleEnabled = useFeature('wenn-der-titel-zu-lang-wird-bitte-ebenfalls-abschn');
 
   const displayDescription = todo.description && todo.description.length > MAX_DESC_LENGTH
     ? todo.description.slice(0, MAX_DESC_LENGTH) + '…'
     : todo.description;
+
+  const displayTitle = truncateTitleEnabled && todo.title.length > MAX_TITLE_LENGTH
+    ? todo.title.slice(0, MAX_TITLE_LENGTH) + '…'
+    : todo.title;
 
   return (
     <div className="mobile-card-full">
@@ -789,7 +802,7 @@ function MobileCard({
         <span className="mobile-card-id">#{id}</span>
         <span className="mobile-card-status">{status}</span>
       </div>
-      <div className="mobile-card-title">{todo.title}</div>
+      <div className="mobile-card-title" title={truncateTitleEnabled && todo.title.length > MAX_TITLE_LENGTH ? todo.title : undefined}>{displayTitle}</div>
       <div className="mobile-card-slug">flag: {slug}</div>
       {todo.description && (
         <div className="mobile-card-desc" title={todo.description}>{displayDescription}</div>
