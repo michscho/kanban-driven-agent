@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -1263,6 +1264,9 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
             <span>AI-Powered Development Workflow</span>
           </div>
           <h1 className="intro-v2-title">
+            <Feature flag="your-ai-agent-your-repository-packe-noch-your-kanb">
+              Your Kanban.<br />
+            </Feature>
             Your AI Agent.<br />
             <span className="intro-v2-title-highlight">Your Repository.</span>
           </h1>
