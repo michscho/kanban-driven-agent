@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature, Feature } from '@/lib/features';
+import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -88,7 +88,7 @@ export default function Home() {
         <HeaderBrand />
         <div className="header-right">
           <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
-<ThemeToggle />
+          <ThemeToggle />
         </div>
       </div>
 
@@ -146,7 +146,6 @@ function Card({
   onOpenLog: () => void;
   onRequestChanges: (todo: Todo) => void;
 }) {
-  const openInSamePage = useFeature('feature-flags-bitte-auf-der-gleichen-seite-ffnen');
   const { status, slug, id } = todo;
   return (
     <div className="card">
