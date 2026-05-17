@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -20,7 +19,6 @@ export default function Home() {
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
   const [minimized, setMinimized] = useState(false);
-  const hideIntro = useFeature('entferne-bitte-die-intro');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -127,8 +125,6 @@ export default function Home() {
 
   return (
     <div className="app">
-      {!hideIntro && <LandingPage />}
-
       <div className={`todo-floating-container ${minimized ? 'minimized' : ''}`}>
         {todoInterface}
       </div>
