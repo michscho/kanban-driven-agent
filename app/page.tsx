@@ -299,8 +299,7 @@ function Card({
       <div className="title" title={todo.title.length > MAX_TITLE_LENGTH ? todo.title : undefined}>#{id} {displayTitle}</div>
       <div className="slug">flag: {slug} · {status}</div>
       {todo.description && <div className="desc" title={todo.description}>{displayDescription}</div>}
-      <Feature flag="wenn-feature-toggels-entfernt-werden-und-es-wieder">
-        {status === 'approving' && (
+      {status === 'approving' && (
           <div className="approving-indicator">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
@@ -308,7 +307,6 @@ function Card({
             <span>Feature-Flags werden entfernt…</span>
           </div>
         )}
-      </Feature>
       <div className="actions">
         {status === 'pending' && (
           <button className="primary" onClick={() => onAction(id, 'run')}>Run</button>
@@ -813,6 +811,12 @@ function IntroPage() {
         <div className="intro-final-cta-content">
           <h2>Built for developers who want AI to work like a teammate — not a black box.</h2>
           <p>Start using Kanban-driven Agent today. Create your first task below and watch the agent build it for you.</p>
+          <Feature flag="in-der-intro-section-f-ge-hinzu-git-clone-https-gi">
+            <div className="intro-git-clone">
+              <code>git clone https://github.com/michscho/kanban-driven-agent</code>
+              <p>and you&apos;re ready!</p>
+            </div>
+          </Feature>
           <div className="intro-final-cta-arrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M19 12l-7 7-7-7"/>
@@ -1142,8 +1146,7 @@ function MobileCard({
       {todo.description && (
         <div className="mobile-card-desc" title={todo.description}>{displayDescription}</div>
       )}
-      <Feature flag="wenn-feature-toggels-entfernt-werden-und-es-wieder">
-        {status === 'approving' && (
+      {status === 'approving' && (
           <div className="approving-indicator">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
@@ -1151,7 +1154,6 @@ function MobileCard({
             <span>Feature-Flags werden entfernt…</span>
           </div>
         )}
-      </Feature>
       <div className="mobile-card-actions">
         {status === 'pending' && (
           <>

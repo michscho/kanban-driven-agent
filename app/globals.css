@@ -90,7 +90,6 @@ input, textarea { font: inherit; color: inherit; }
 .card .err { color: var(--error-color); font-size: 12px; margin-top: 6px; white-space: pre-wrap; }
 
 /* Approving Indicator - shown when feature flags are being removed */
-/* Feature flag: wenn-feature-toggels-entfernt-werden-und-es-wieder */
 .approving-indicator {
   display: flex;
   align-items: center;
@@ -1624,6 +1623,33 @@ input, textarea { font: inherit; color: inherit; }
 .intro-final-cta-arrow svg {
   width: 32px;
   height: 32px;
+}
+
+.intro-git-clone {
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-card);
+}
+
+.intro-git-clone code {
+  display: block;
+  font-size: 16px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  color: var(--link-color);
+  padding: 12px 16px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  word-break: break-all;
+}
+
+.intro-git-clone p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 @keyframes bounceDown {
