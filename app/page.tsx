@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -167,10 +166,9 @@ function Card({
   onRequestChanges: (todo: Todo) => void;
 }) {
   const { status, slug, id } = todo;
-  const truncateDescriptions = useFeature('schneide-zu-lange-beschreibungen-ab');
   const MAX_DESC_LENGTH = 100;
 
-  const displayDescription = todo.description && truncateDescriptions && todo.description.length > MAX_DESC_LENGTH
+  const displayDescription = todo.description && todo.description.length > MAX_DESC_LENGTH
     ? todo.description.slice(0, MAX_DESC_LENGTH) + '…'
     : todo.description;
 
@@ -178,7 +176,7 @@ function Card({
     <div className="card">
       <div className="title">#{id} {todo.title}</div>
       <div className="slug">flag: {slug} · {status}</div>
-      {todo.description && <div className="desc" title={truncateDescriptions ? todo.description : undefined}>{displayDescription}</div>}
+      {todo.description && <div className="desc" title={todo.description}>{displayDescription}</div>}
       <div className="actions">
         {status === 'pending' && (
           <button className="primary" onClick={() => onAction(id, 'run')}>Run</button>
