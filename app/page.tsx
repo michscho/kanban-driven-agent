@@ -493,6 +493,8 @@ function Card({
 function LogModal({ id, onClose, aboveToolbar }: { id: number; onClose: () => void; aboveToolbar?: boolean }) {
   const [log, setLog] = useState('(loading…)');
   const [status, setStatus] = useState<string>('');
+  const smartLogs = useFeature('gliedere-die-agent-logs-noch-schlauer-um-besseren-');
+
   useEffect(() => {
     let alive = true;
     async function tick() {
@@ -506,6 +508,22 @@ function LogModal({ id, onClose, aboveToolbar }: { id: number; onClose: () => vo
     const iv = setInterval(tick, 1500);
     return () => { alive = false; clearInterval(iv); };
   }, [id]);
+
+  // Use smart log view when feature flag is active
+  if (smartLogs) {
+    return (
+      <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
+        <div className="inner smart-log-inner" onClick={(e) => e.stopPropagation()}>
+          <div className="head">
+            <strong>Agent log — #{id} ({status})</strong>
+            <button onClick={onClose}>Close</button>
+          </div>
+          <SmartLogView log={log} status={status} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`log-modal${aboveToolbar ? ' modal-above-toolbar' : ''}`} onClick={onClose}>
       <div className="inner" onClick={(e) => e.stopPropagation()}>
@@ -514,6 +532,244 @@ function LogModal({ id, onClose, aboveToolbar }: { id: number; onClose: () => vo
           <button onClick={onClose}>Close</button>
         </div>
         <pre>{log}</pre>
+      </div>
+    </div>
+  );
+}
+
+// Smart Log View - parses and displays agent logs in a structured way
+// Feature flag: gliedere-die-agent-logs-noch-schlauer-um-besseren-
+interface LogEntry {
+  type: 'system' | 'tool' | 'tool_result' | 'result' | 'text' | 'harness';
+  content: string;
+  toolName?: string;
+  toolInput?: string;
+  duration?: string;
+  cost?: string;
+}
+
+function parseAgentLog(log: string): LogEntry[] {
+  const entries: LogEntry[] = [];
+  const lines = log.split('\n');
+  let currentText = '';
+
+  for (const line of lines) {
+    // System messages
+    const systemMatch = line.match(/^\[system\]\s*(.*)/);
+    if (systemMatch) {
+      if (currentText.trim()) {
+        entries.push({ type: 'text', content: currentText.trim() });
+        currentText = '';
+      }
+      entries.push({ type: 'system', content: systemMatch[1] || 'init' });
+      continue;
+    }
+
+    // Tool calls
+    const toolMatch = line.match(/^\[tool:\s*(\w+)\]\s*(.*)/);
+    if (toolMatch) {
+      if (currentText.trim()) {
+        entries.push({ type: 'text', content: currentText.trim() });
+        currentText = '';
+      }
+      entries.push({ type: 'tool', content: line, toolName: toolMatch[1], toolInput: toolMatch[2] });
+      continue;
+    }
+
+    // Tool results
+    const resultMatch = line.match(/^\[tool_result\]\s*(.*)/);
+    if (resultMatch) {
+      if (currentText.trim()) {
+        entries.push({ type: 'text', content: currentText.trim() });
+        currentText = '';
+      }
+      entries.push({ type: 'tool_result', content: resultMatch[1] });
+      continue;
+    }
+
+    // Final result
+    const finalMatch = line.match(/^\[result\]\s*(\w*)\s*\((\d+)ms,\s*\$([^)]+)\)/);
+    if (finalMatch) {
+      if (currentText.trim()) {
+        entries.push({ type: 'text', content: currentText.trim() });
+        currentText = '';
+      }
+      entries.push({ type: 'result', content: finalMatch[1] || 'done', duration: finalMatch[2], cost: finalMatch[3] });
+      continue;
+    }
+
+    // Harness messages
+    const harnessMatch = line.match(/^\[harness\]\s*(.*)/);
+    if (harnessMatch) {
+      if (currentText.trim()) {
+        entries.push({ type: 'text', content: currentText.trim() });
+        currentText = '';
+      }
+      entries.push({ type: 'harness', content: harnessMatch[1] });
+      continue;
+    }
+
+    // Regular text
+    currentText += line + '\n';
+  }
+
+  if (currentText.trim()) {
+    entries.push({ type: 'text', content: currentText.trim() });
+  }
+
+  return entries;
+}
+
+function SmartLogView({ log, status }: { log: string; status: string }) {
+  const entries = parseAgentLog(log);
+  const [expandedTools, setExpandedTools] = useState<Set<number>>(new Set());
+
+  const toggleTool = (index: number) => {
+    setExpandedTools(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
+
+  // Calculate stats
+  const toolCalls = entries.filter(e => e.type === 'tool').length;
+  const resultEntry = entries.find(e => e.type === 'result');
+  const toolTypes = entries.filter(e => e.type === 'tool').reduce((acc, e) => {
+    const name = e.toolName || 'unknown';
+    acc[name] = (acc[name] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  return (
+    <div className="smart-log-container">
+      {/* Stats bar */}
+      <div className="smart-log-stats">
+        <div className="smart-log-stat">
+          <span className="smart-log-stat-icon">🔧</span>
+          <span className="smart-log-stat-value">{toolCalls}</span>
+          <span className="smart-log-stat-label">Tool Calls</span>
+        </div>
+        {Object.entries(toolTypes).slice(0, 4).map(([name, count]) => (
+          <div key={name} className="smart-log-stat tool-type">
+            <span className="smart-log-stat-value">{count}×</span>
+            <span className="smart-log-stat-label">{name}</span>
+          </div>
+        ))}
+        {resultEntry?.duration && (
+          <div className="smart-log-stat">
+            <span className="smart-log-stat-icon">⏱️</span>
+            <span className="smart-log-stat-value">{(parseInt(resultEntry.duration) / 1000).toFixed(1)}s</span>
+            <span className="smart-log-stat-label">Duration</span>
+          </div>
+        )}
+        {resultEntry?.cost && (
+          <div className="smart-log-stat">
+            <span className="smart-log-stat-icon">💰</span>
+            <span className="smart-log-stat-value">${resultEntry.cost}</span>
+            <span className="smart-log-stat-label">Cost</span>
+          </div>
+        )}
+      </div>
+
+      {/* Log entries */}
+      <div className="smart-log-entries">
+        {entries.map((entry, i) => {
+          if (entry.type === 'system') {
+            return (
+              <div key={i} className="smart-log-entry smart-log-system">
+                <span className="smart-log-badge system">system</span>
+                <span className="smart-log-content">{entry.content}</span>
+              </div>
+            );
+          }
+
+          if (entry.type === 'tool') {
+            const isExpanded = expandedTools.has(i);
+            let parsedInput: any = null;
+            try {
+              parsedInput = JSON.parse(entry.toolInput || '{}');
+            } catch {
+              // Keep as string
+            }
+
+            return (
+              <div key={i} className="smart-log-entry smart-log-tool">
+                <button className="smart-log-tool-header" onClick={() => toggleTool(i)}>
+                  <span className="smart-log-badge tool">{entry.toolName}</span>
+                  <span className="smart-log-tool-preview">
+                    {parsedInput?.command || parsedInput?.pattern || parsedInput?.file_path || parsedInput?.content?.slice(0, 50) || '…'}
+                  </span>
+                  <span className={`smart-log-expand-icon ${isExpanded ? 'expanded' : ''}`}>▶</span>
+                </button>
+                {isExpanded && (
+                  <pre className="smart-log-tool-input">
+                    {parsedInput ? JSON.stringify(parsedInput, null, 2) : entry.toolInput}
+                  </pre>
+                )}
+              </div>
+            );
+          }
+
+          if (entry.type === 'tool_result') {
+            return (
+              <div key={i} className="smart-log-entry smart-log-result">
+                <span className="smart-log-badge result">result</span>
+                <pre className="smart-log-result-content">{entry.content}</pre>
+              </div>
+            );
+          }
+
+          if (entry.type === 'harness') {
+            return (
+              <div key={i} className="smart-log-entry smart-log-harness">
+                <span className="smart-log-badge harness">harness</span>
+                <span className="smart-log-content">{entry.content}</span>
+              </div>
+            );
+          }
+
+          if (entry.type === 'result') {
+            return (
+              <div key={i} className="smart-log-entry smart-log-final">
+                <span className="smart-log-badge final">✓ {entry.content}</span>
+                <span className="smart-log-meta">
+                  {entry.duration && <span>{(parseInt(entry.duration) / 1000).toFixed(1)}s</span>}
+                  {entry.cost && <span>${entry.cost}</span>}
+                </span>
+              </div>
+            );
+          }
+
+          // Text entries (assistant messages)
+          if (entry.content) {
+            return (
+              <div key={i} className="smart-log-entry smart-log-text">
+                <span className="smart-log-badge text">assistant</span>
+                <div className="smart-log-text-content">{entry.content}</div>
+              </div>
+            );
+          }
+
+          return null;
+        })}
+
+        {/* Loading indicator when in progress */}
+        {(status === 'in_progress' || status === 'approving') && (
+          <div className="smart-log-entry smart-log-loading">
+            <span className="smart-log-badge loading">
+              <svg className="smart-log-spinner" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+              </svg>
+              running
+            </span>
+            <span className="smart-log-content">Agent is working…</span>
+          </div>
+        )}
       </div>
     </div>
   );
