@@ -47,6 +47,8 @@ export default function Home() {
   const removeTransparency = useFeature('kanban-nicht-alles-ist-transparent');
   // Close animation goes to bottom-right
   const closeToBottomRight = true;
+  // Feature flag: when active, show error alerts when revert fails
+  const improvedRevertErrorHandling = useFeature('revert-funktioniert-z-b-f-r-24-your-ai-agent-your-');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
