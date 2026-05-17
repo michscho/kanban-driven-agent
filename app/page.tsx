@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -184,14 +183,12 @@ export default function Home() {
     );
   }
 
-  const showNewIntro = useFeature('wir-bauen-eine-bessere-intro-section-ein-bild-von-');
-
   return (
     <div className="app">
       {/* Intro Page */}
-      {showNewIntro ? <IntroPageV2 onTryItOut={() => setMinimized(false)} /> : <IntroPage />}
+      <IntroPageV2 onTryItOut={() => setMinimized(false)} />
 
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} ${showNewIntro ? 'intro-v2-board' : ''} todo-floating-top-spacing todo-floating-transparent`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} intro-v2-board todo-floating-top-spacing todo-floating-transparent`}>
         {todoInterface}
       </div>
 
