@@ -2655,3 +2655,111 @@ input, textarea { font: inherit; color: inherit; }
     display: none;
   }
 }
+
+/* ============================================= */
+/* Backlog Add Form Styles                        */
+/* Feature flag: in-der-backlog-spalte-ebenfalls-ein-add-hinzuf-gen */
+/* ============================================= */
+
+.backlog-add-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-card);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.backlog-add-btn:hover {
+  background: var(--bg-card-inner);
+  border-color: var(--link-color);
+  color: var(--link-color);
+}
+
+.backlog-add-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.backlog-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+}
+
+.backlog-add-form input,
+.backlog-add-form textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  resize: vertical;
+}
+
+.backlog-add-form input:focus,
+.backlog-add-form textarea:focus {
+  outline: none;
+  border-color: var(--btn-primary);
+}
+
+.backlog-add-form textarea {
+  min-height: 50px;
+  max-height: 100px;
+}
+
+.backlog-add-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.backlog-add-form-actions button {
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.backlog-add-form-actions button[type="button"] {
+  background: var(--bg-card-inner);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.backlog-add-form-actions button[type="button"]:hover {
+  background: var(--count-bg);
+}
+
+.backlog-add-form-actions button.primary {
+  background: var(--btn-primary);
+  border: 1px solid var(--btn-primary);
+  color: white;
+}
+
+.backlog-add-form-actions button.primary:hover {
+  background: #2557c4;
+}
+
+.backlog-add-form-actions button.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

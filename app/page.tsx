@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
-import { useFeature } from '@/lib/features';
+import { useFeature, Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -47,6 +47,8 @@ export default function Home() {
   const closeToBottomRight = true;
   // Feature flag: when active, show error alerts when revert fails
   const improvedRevertErrorHandling = useFeature('revert-funktioniert-z-b-f-r-24-your-ai-agent-your-');
+  // Feature flag: when active, show settings button above/before the Agent branding
+  const settingsAboveAgent = useFeature('einstellung-button-sollte-ber-den-agent-angezeigt-');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -99,6 +101,16 @@ export default function Home() {
   async function remove(id: number) {
     if (!confirm('Delete this todo?')) return;
     await fetch(`/api/todos/${id}`, { method: 'DELETE' });
+    refresh();
+  }
+
+  // Reusable addTodo function for inline add forms
+  async function addTodo(todoTitle: string, todoDesc: string) {
+    await fetch('/api/todos', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: todoTitle, description: todoDesc }),
+    });
     refresh();
   }
 
@@ -163,6 +175,7 @@ export default function Home() {
               onRemove={remove}
               onOpenLog={setOpenLog}
               onRequestChanges={handleRequestChanges}
+              onAddTodo={col.key === 'pending' ? addTodo : undefined}
             />
           );
         })}
@@ -243,6 +256,7 @@ function Column({
   onRemove,
   onOpenLog,
   onRequestChanges,
+  onAddTodo,
 }: {
   label: string;
   items: Todo[];
@@ -250,6 +264,7 @@ function Column({
   onRemove: (id: number) => void;
   onOpenLog: (id: number) => void;
   onRequestChanges: (todo: Todo) => void;
+  onAddTodo?: (title: string, description: string) => Promise<void>;
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -260,6 +275,11 @@ function Column({
   return (
     <div className="col">
       <h2>{label}<span className="count">{items.length}</span></h2>
+      {onAddTodo && (
+        <Feature flag="in-der-backlog-spalte-ebenfalls-ein-add-hinzuf-gen">
+          <BacklogAddForm onAddTodo={onAddTodo} />
+        </Feature>
+      )}
       {displayedItems.map((t) => (
         <Card
           key={t.id}
@@ -279,6 +299,68 @@ function Column({
         </button>
       )}
     </div>
+  );
+}
+
+// BacklogAddForm - Inline add form for the Backlog column
+// Feature flag: in-der-backlog-spalte-ebenfalls-ein-add-hinzuf-gen
+function BacklogAddForm({ onAddTodo }: { onAddTodo: (title: string, description: string) => Promise<void> }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!title.trim()) return;
+    setSubmitting(true);
+    try {
+      await onAddTodo(title, desc);
+      setTitle('');
+      setDesc('');
+      setIsExpanded(false);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (!isExpanded) {
+    return (
+      <button
+        className="backlog-add-btn"
+        onClick={() => setIsExpanded(true)}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add
+      </button>
+    );
+  }
+
+  return (
+    <form className="backlog-add-form" onSubmit={handleSubmit}>
+      <input
+        placeholder="Todo title…"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        autoFocus
+        required
+      />
+      <textarea
+        placeholder="Description (optional)"
+        value={desc}
+        onChange={(e) => setDesc(e.target.value)}
+        rows={2}
+      />
+      <div className="backlog-add-form-actions">
+        <button type="button" onClick={() => setIsExpanded(false)}>Cancel</button>
+        <button type="submit" className="primary" disabled={submitting || !title.trim()}>
+          {submitting ? 'Adding…' : 'Add'}
+        </button>
+      </div>
+    </form>
   );
 }
 
