@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
 import { useFeature } from '@/lib/features';
@@ -303,7 +304,7 @@ function Card({
         )}
         {status === 'done' && (
           <>
-            <a href={`/?feature=${slug}`}>Preview</a>
+            <SmartPreviewLink slug={slug} />
             <button className="primary" onClick={() => onAction(id, 'approve')}>Approve</button>
             <button className="warning" onClick={() => onRequestChanges(todo)}>Änderungen</button>
             <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
@@ -819,7 +820,7 @@ function MobileCard({
         )}
         {status === 'done' && (
           <>
-            <a href={`/?feature=${slug}`}>Preview</a>
+            <SmartPreviewLink slug={slug} />
             <button className="primary" onClick={() => onAction(id, 'approve')}>Approve</button>
             <button className="warning" onClick={() => onRequestChanges(todo)}>Ändern</button>
             <button className="danger" onClick={() => onAction(id, 'revert')}>Revert</button>
@@ -858,6 +859,20 @@ function HeaderBrand() {
       <h1>Kanban driven Agent</h1>
     </div>
   );
+}
+
+// Smart Preview Link component that shows "Deactivate Preview" when feature is already active
+// Feature flag: preview-wenn-es-ge-ffnet-wird-steht-dann-deactivat
+function SmartPreviewLink({ slug }: { slug: string }) {
+  const smartPreviewEnabled = useFeature('preview-wenn-es-ge-ffnet-wird-steht-dann-deactivat');
+  const searchParams = useSearchParams();
+  const activeFeature = searchParams.get('feature');
+  const isPreviewActive = activeFeature?.split(',').map(s => s.trim()).includes(slug);
+
+  if (smartPreviewEnabled && isPreviewActive) {
+    return <a href="/">Deactivate Preview</a>;
+  }
+  return <a href={`/?feature=${slug}`}>Preview</a>;
 }
 
 function ThemeToggle() {
