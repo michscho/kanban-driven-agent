@@ -307,3 +307,23 @@ input, textarea { font: inherit; color: inherit; }
 .todo-floating-container.todo-floating-top-spacing {
   margin-top: 24px;
 }
+
+/* Show more button for columns */
+.show-more-btn {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 8px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-card);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.show-more-btn:hover {
+  background: var(--count-bg);
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}

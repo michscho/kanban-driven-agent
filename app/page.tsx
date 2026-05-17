@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { useFeature, Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -10,6 +11,23 @@ const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) 
   { key: 'done', label: 'Review', match: (s) => s === 'done' || s === 'failed' },
   { key: 'approved', label: 'Shipped', match: (s) => s === 'approved' || s === 'reverted' },
 ];
+
+// Custom hook for responsive breakpoint detection
+function useWindowWidth() {
+  const [width, setWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+    // Set initial width
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+}
 
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -19,6 +37,11 @@ export default function Home() {
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
   const [minimized, setMinimized] = useState(false);
+
+  // Feature flag for responsive mini-view
+  const responsiveMiniViewEnabled = useFeature('wenn-verkleinert-bitte-eine-seite-erstellen-mit-ei');
+  const windowWidth = useWindowWidth();
+  const isMobileView = responsiveMiniViewEnabled && windowWidth !== null && windowWidth < 768;
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -111,12 +134,15 @@ export default function Home() {
         {COLUMNS.map((col) => {
           const items = todos.filter((t) => col.match(t.status));
           return (
-            <div key={col.key} className="col">
-              <h2>{col.label}<span className="count">{items.length}</span></h2>
-              {items.map((t) => (
-                <Card key={t.id} todo={t} onAction={action} onRemove={remove} onOpenLog={() => setOpenLog(t.id)} onRequestChanges={handleRequestChanges} />
-              ))}
-            </div>
+            <Column
+              key={col.key}
+              label={col.label}
+              items={items}
+              onAction={action}
+              onRemove={remove}
+              onOpenLog={setOpenLog}
+              onRequestChanges={handleRequestChanges}
+            />
           );
         })}
       </div>
@@ -147,6 +173,55 @@ export default function Home() {
           onClose={() => setFeedbackTodo(null)}
           onSubmit={submitFeedback}
         />
+      )}
+    </div>
+  );
+}
+
+const SHOW_MORE_THRESHOLD = 12;
+
+function Column({
+  label,
+  items,
+  onAction,
+  onRemove,
+  onOpenLog,
+  onRequestChanges,
+}: {
+  label: string;
+  items: Todo[];
+  onAction: (id: number, path: string) => void;
+  onRemove: (id: number) => void;
+  onOpenLog: (id: number) => void;
+  onRequestChanges: (todo: Todo) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const showMoreEnabled = useFeature('bei-der-todo-spalte-ab-12-mehr-anzeigen-erlauben-s');
+
+  const shouldLimit = showMoreEnabled && items.length >= SHOW_MORE_THRESHOLD && !expanded;
+  const displayedItems = shouldLimit ? items.slice(0, SHOW_MORE_THRESHOLD) : items;
+  const hiddenCount = items.length - SHOW_MORE_THRESHOLD;
+
+  return (
+    <div className="col">
+      <h2>{label}<span className="count">{items.length}</span></h2>
+      {displayedItems.map((t) => (
+        <Card
+          key={t.id}
+          todo={t}
+          onAction={onAction}
+          onRemove={onRemove}
+          onOpenLog={() => onOpenLog(t.id)}
+          onRequestChanges={onRequestChanges}
+        />
+      ))}
+      {showMoreEnabled && items.length >= SHOW_MORE_THRESHOLD && (
+        <button
+          className="show-more-btn"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? 'Weniger anzeigen' : `${hiddenCount} weitere anzeigen…`}
+        </button>
       )}
     </div>
   );
