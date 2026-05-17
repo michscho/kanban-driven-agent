@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import type { Todo, TodoStatus } from '@/lib/db';
-import { Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -60,9 +59,7 @@ export default function Home() {
 
   return (
     <div className="app">
-      <Feature flag="eine-startseite-bitte-zur-erkl-rung-dieses-repos">
-        <LandingPage />
-      </Feature>
+      <LandingPage />
 
       <div className="header">
         <h1>kanban-driven-agent</h1>
