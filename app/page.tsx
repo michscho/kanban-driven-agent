@@ -39,10 +39,10 @@ export default function Home() {
   const [minimized, setMinimized] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  // Feature flag for responsive mini-view
-  const responsiveMiniViewEnabled = useFeature('wenn-verkleinert-bitte-eine-seite-erstellen-mit-ei');
+  // Feature flag for transparent Kanban board
+  const transparentModeEnabled = useFeature('mache-den-kanban-driven-agent-ein-wenig-transparen');
   const windowWidth = useWindowWidth();
-  const isMobileView = responsiveMiniViewEnabled && windowWidth !== null && windowWidth < 768;
+  const isMobileView = windowWidth !== null && windowWidth < 768;
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -187,7 +187,7 @@ export default function Home() {
 
   return (
     <div className="app">
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing${transparentModeEnabled ? ' todo-floating-transparent' : ''}`}>
         {todoInterface}
       </div>
 

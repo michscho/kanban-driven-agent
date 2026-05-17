@@ -308,6 +308,59 @@ input, textarea { font: inherit; color: inherit; }
   margin-top: 24px;
 }
 
+/* ============================================= */
+/* Transparent Kanban Board Styles               */
+/* Feature flag: mache-den-kanban-driven-agent-ein-wenig-transparen */
+/* ============================================= */
+
+.todo-floating-container.todo-floating-transparent {
+  background: rgba(21, 23, 27, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.todo-floating-container.todo-floating-transparent .col {
+  background: rgba(21, 23, 27, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.todo-floating-container.todo-floating-transparent .card {
+  background: rgba(28, 31, 37, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.todo-floating-container.todo-floating-transparent .new-form {
+  background: rgba(28, 31, 37, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+:root[data-theme="light"] .todo-floating-container.todo-floating-transparent {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+:root[data-theme="light"] .todo-floating-container.todo-floating-transparent .col {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+:root[data-theme="light"] .todo-floating-container.todo-floating-transparent .card {
+  background: rgba(249, 250, 251, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+:root[data-theme="light"] .todo-floating-container.todo-floating-transparent .new-form {
+  background: rgba(249, 250, 251, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 /* Show more button for columns */
 .show-more-btn {
   width: 100%;
