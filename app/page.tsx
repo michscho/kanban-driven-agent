@@ -21,6 +21,7 @@ export default function Home() {
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
   const [minimized, setMinimized] = useState(false);
   const canMinimize = useFeature('kanban-driven-agent-kann-mittels-button-verkleiner');
+  const hideIntro = useFeature('entferne-bitte-die-intro');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -129,7 +130,7 @@ export default function Home() {
 
   return (
     <div className="app">
-      <LandingPage />
+      {!hideIntro && <LandingPage />}
 
       <div className={`todo-floating-container ${canMinimize && minimized ? 'minimized' : ''}`}>
         {todoInterface}
