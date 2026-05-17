@@ -39,6 +39,10 @@ export default function Home() {
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
   const [minimized, setMinimized] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [questionModalOpen, setQuestionModalOpen] = useState(false);
+
+  // Feature flag: Q&A functionality
+  const showQAFeature = useFeature('erm-gliche-es-eine-frage-zu-stellen-wo-ich-eine-an');
 
   const windowWidth = useWindowWidth();
   const isMobileView = windowWidth !== null && windowWidth < 768;
@@ -49,8 +53,6 @@ export default function Home() {
   const improvedRevertErrorHandling = useFeature('revert-funktioniert-z-b-f-r-24-your-ai-agent-your-');
   // Feature flag: when active, show settings button above/before the Agent branding
   const settingsAboveAgent = useFeature('einstellung-button-sollte-ber-den-agent-angezeigt-');
-  // Feature flag: when active, modals appear above the toolbar
-  const modalsAboveToolbar = useFeature('alle-modals-vom-kanban-driven-agent-sollten-ber-de');
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
@@ -128,6 +130,30 @@ export default function Home() {
     setFeedbackTodo(null);
   }
 
+  // Submit a question about the repo (creates a Q&A todo and runs it immediately)
+  async function submitQuestion(question: string) {
+    const todoTitle = `[Q&A] ${question}`;
+    const todoDesc = `Beantworte die folgende Frage über das Repository. Durchsuche die Codebase, lies relevante Dateien und gib eine hilfreiche Antwort. Ändere KEINE Dateien - nur lesen und antworten.\n\nFrage: ${question}`;
+
+    // Create the Q&A todo
+    const response = await fetch('/api/todos', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: todoTitle, description: todoDesc }),
+    });
+
+    if (response.ok) {
+      const todo = await response.json();
+      // Immediately run the Q&A task
+      await fetch(`/api/todos/${todo.id}/run`, { method: 'POST' });
+      refresh();
+      // Open the log modal to show the answer
+      setOpenLog(todo.id);
+    }
+
+    setQuestionModalOpen(false);
+  }
+
   // Settings button component for reuse
   const settingsButton = (
     <button className="settings-btn" onClick={() => setSettingsOpen(true)} title="Einstellungen">
@@ -146,6 +172,16 @@ export default function Home() {
         <HeaderBrand />
         <div className="header-right">
           <ChangeCounter todos={todos} />
+          {showQAFeature && (
+            <button className="ask-question-btn" onClick={() => setQuestionModalOpen(true)} title="Frage zum Repo stellen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              Frage stellen
+            </button>
+          )}
           <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
           <ThemeToggle />
           <button className="minimize-btn" onClick={() => setMinimized(true)} title="Minimieren">
@@ -210,13 +246,13 @@ export default function Home() {
           onOpenLog={setOpenLog}
           onRequestChanges={handleRequestChanges}
         />
-        {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} aboveToolbar={modalsAboveToolbar} />}
+        {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} aboveToolbar />}
         {feedbackTodo && (
           <FeedbackModal
             todo={feedbackTodo}
             onClose={() => setFeedbackTodo(null)}
             onSubmit={submitFeedback}
-            aboveToolbar={modalsAboveToolbar}
+            aboveToolbar
           />
         )}
       </div>
@@ -243,17 +279,24 @@ export default function Home() {
         </button>
       )}
 
-      {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} aboveToolbar={modalsAboveToolbar} />}
+      {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} aboveToolbar />}
       {feedbackTodo && (
         <FeedbackModal
           todo={feedbackTodo}
           onClose={() => setFeedbackTodo(null)}
           onSubmit={submitFeedback}
-          aboveToolbar={modalsAboveToolbar}
+          aboveToolbar
         />
       )}
       {settingsOpen && (
-        <SettingsModal onClose={() => setSettingsOpen(false)} aboveToolbar={modalsAboveToolbar} />
+        <SettingsModal onClose={() => setSettingsOpen(false)} aboveToolbar />
+      )}
+      {showQAFeature && questionModalOpen && (
+        <QuestionModal
+          onClose={() => setQuestionModalOpen(false)}
+          onSubmit={submitQuestion}
+          aboveToolbar
+        />
       )}
     </div>
   );
