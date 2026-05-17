@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Todo, TodoStatus } from '@/lib/db';
 import { Logo } from '@/components/Logo';
+import { useFeature, Feature } from '@/lib/features';
 
 const COLUMNS: { key: TodoStatus | 'wip'; label: string; match: (s: TodoStatus) => boolean }[] = [
   { key: 'pending', label: 'Backlog', match: (s) => s === 'pending' },
@@ -183,12 +184,14 @@ export default function Home() {
     );
   }
 
+  const showNewIntro = useFeature('wir-bauen-eine-bessere-intro-section-ein-bild-von-');
+
   return (
     <div className="app">
       {/* Intro Page */}
-      <IntroPage />
+      {showNewIntro ? <IntroPageV2 onTryItOut={() => setMinimized(false)} /> : <IntroPage />}
 
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} todo-floating-top-spacing todo-floating-transparent`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} ${showNewIntro ? 'intro-v2-board' : ''} todo-floating-top-spacing todo-floating-transparent`}>
         {todoInterface}
       </div>
 
@@ -296,6 +299,16 @@ function Card({
       <div className="title" title={todo.title.length > MAX_TITLE_LENGTH ? todo.title : undefined}>#{id} {displayTitle}</div>
       <div className="slug">flag: {slug} · {status}</div>
       {todo.description && <div className="desc" title={todo.description}>{displayDescription}</div>}
+      <Feature flag="wenn-feature-toggels-entfernt-werden-und-es-wieder">
+        {status === 'approving' && (
+          <div className="approving-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+            </svg>
+            <span>Feature-Flags werden entfernt…</span>
+          </div>
+        )}
+      </Feature>
       <div className="actions">
         {status === 'pending' && (
           <button className="primary" onClick={() => onAction(id, 'run')}>Run</button>
@@ -1129,6 +1142,16 @@ function MobileCard({
       {todo.description && (
         <div className="mobile-card-desc" title={todo.description}>{displayDescription}</div>
       )}
+      <Feature flag="wenn-feature-toggels-entfernt-werden-und-es-wieder">
+        {status === 'approving' && (
+          <div className="approving-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+            </svg>
+            <span>Feature-Flags werden entfernt…</span>
+          </div>
+        )}
+      </Feature>
       <div className="mobile-card-actions">
         {status === 'pending' && (
           <>
