@@ -41,9 +41,6 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [questionModalOpen, setQuestionModalOpen] = useState(false);
 
-  // Feature flag: Q&A functionality
-  const showQAFeature = useFeature('erm-gliche-es-eine-frage-zu-stellen-wo-ich-eine-an');
-
   const windowWidth = useWindowWidth();
   const isMobileView = windowWidth !== null && windowWidth < 768;
 
@@ -172,16 +169,14 @@ export default function Home() {
         <HeaderBrand />
         <div className="header-right">
           <ChangeCounter todos={todos} />
-          {showQAFeature && (
-            <button className="ask-question-btn" onClick={() => setQuestionModalOpen(true)} title="Frage zum Repo stellen">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
-              Frage stellen
-            </button>
-          )}
+          <button className="ask-question-btn" onClick={() => setQuestionModalOpen(true)} title="Frage zum Repo stellen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            Frage stellen
+          </button>
           <div className="muted">port 3010 · preview a feature: <code>?feature=&lt;slug&gt;</code></div>
           <ThemeToggle />
           <button className="minimize-btn" onClick={() => setMinimized(true)} title="Minimieren">
@@ -291,7 +286,7 @@ export default function Home() {
       {settingsOpen && (
         <SettingsModal onClose={() => setSettingsOpen(false)} aboveToolbar />
       )}
-      {showQAFeature && questionModalOpen && (
+      {questionModalOpen && (
         <QuestionModal
           onClose={() => setQuestionModalOpen(false)}
           onSubmit={submitQuestion}
