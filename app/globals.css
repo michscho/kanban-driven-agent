@@ -2517,3 +2517,30 @@ input, textarea { font: inherit; color: inherit; }
 .todo-floating-container.todo-always-floating::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* ============================================= */
+/* Close Animation to Bottom Right               */
+/* Feature flag: schlie-en-animation-sollte-nach-rechts-unten-gehen */
+/* ============================================= */
+
+/* Standard floating container - animate to bottom right */
+.todo-floating-container.todo-close-bottom-right {
+  transform-origin: bottom right;
+}
+
+.todo-floating-container.todo-close-bottom-right.minimized {
+  transform: translateX(100vw) translateY(100vh) scale(0.1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Always-floating container - animate to bottom right */
+.todo-floating-container.todo-always-floating.todo-close-bottom-right {
+  transform-origin: bottom right;
+}
+
+.todo-floating-container.todo-always-floating.todo-close-bottom-right.minimized {
+  transform: translateX(50%) translateY(100vh) scale(0.1);
+  opacity: 0;
+  pointer-events: none;
+}

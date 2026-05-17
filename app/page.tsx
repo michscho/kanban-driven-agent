@@ -43,6 +43,9 @@ export default function Home() {
   const windowWidth = useWindowWidth();
   const isMobileView = windowWidth !== null && windowWidth < 768;
 
+  // Feature flag: when active, remove transparency from the board
+  const removeTransparency = useFeature('kanban-nicht-alles-ist-transparent');
+
   const refresh = useCallback(async () => {
     const r = await fetch('/api/todos', { cache: 'no-store' });
     if (r.ok) setTodos(await r.json());
@@ -189,7 +192,7 @@ export default function Home() {
       {/* Intro Page */}
       <IntroPageV2 onTryItOut={() => setMinimized(false)} />
 
-      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} intro-v2-board todo-floating-top-spacing todo-floating-transparent todo-always-floating`}>
+      <div className={`todo-floating-container ${minimized ? 'minimized' : ''} intro-v2-board todo-floating-top-spacing ${removeTransparency ? '' : 'todo-floating-transparent'} todo-always-floating`}>
         {todoInterface}
       </div>
 
