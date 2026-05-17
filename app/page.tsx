@@ -37,7 +37,7 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [openLog, setOpenLog] = useState<number | null>(null);
   const [feedbackTodo, setFeedbackTodo] = useState<Todo | null>(null);
-  const [minimized, setMinimized] = useState(false);
+  const [minimized, setMinimized] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [questionModalOpen, setQuestionModalOpen] = useState(false);
 
@@ -265,13 +265,22 @@ export default function Home() {
 
       {/* Minimized floating logo button */}
       {minimized && (
-        <button
-          className="floating-logo-btn floating-logo-btn-right"
-          onClick={() => setMinimized(false)}
-          title="Kanban Board öffnen"
-        >
-          <Logo size={32} />
-        </button>
+        <div className="floating-logo-launcher floating-logo-launcher-right">
+          <div className="floating-logo-hint" aria-hidden="true">
+            <span>Open board</span>
+            <svg viewBox="0 0 64 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 12h54"></path>
+              <path d="M48 5l8 7-8 7"></path>
+            </svg>
+          </div>
+          <button
+            className="floating-logo-btn"
+            onClick={() => setMinimized(false)}
+            title="Kanban Board öffnen"
+          >
+            <Logo size={32} />
+          </button>
+        </div>
       )}
 
       {openLog !== null && <LogModal id={openLog} onClose={() => setOpenLog(null)} aboveToolbar />}
@@ -1689,22 +1698,6 @@ function GitHubLink({ className }: { className?: string }) {
   );
 }
 
-// GitHub Pages Link Component
-function GitHubPagesLink({ className }: { className?: string }) {
-  const githubPagesUrl = 'https://michscho.github.io/kanban-driven-agent';
-
-  return (
-    <a href={githubPagesUrl} target="_blank" rel="noopener noreferrer" className={`github-pages-link ${className || ''}`}>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-      </svg>
-      GitHub Pages
-    </a>
-  );
-}
-
 // Enhanced Intro Page V2 - Feature: wir-bauen-eine-bessere-intro-section-ein-bild-von-
 function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
   const [boardExpanded, setBoardExpanded] = useState(false);
@@ -1734,7 +1727,6 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
               Try it out
             </button>
             <GitHubLink className="intro-v2-cta-secondary" />
-            <GitHubPagesLink className="intro-v2-cta-secondary" />
           </div>
           <div className="intro-v2-clone-now">
             <span className="intro-v2-clone-label">Clone now:</span>
@@ -1762,50 +1754,117 @@ function IntroPageV2({ onTryItOut }: { onTryItOut: () => void }) {
               </div>
             </div>
             <div className="intro-v2-mockup-content">
-              {/* Simulated WebApp Content */}
-              <div className="intro-v2-mockup-nav">
-                <div className="intro-v2-mockup-nav-logo"></div>
-                <div className="intro-v2-mockup-nav-items">
-                  <span></span><span></span><span></span>
+              {/* Animated target page being built */}
+              <div className="intro-v2-target-page">
+                <div className="intro-v2-target-nav">
+                  <div className="intro-v2-target-brand">
+                    <span className="intro-v2-target-logo"></span>
+                    <span>Launchpad</span>
+                  </div>
+                  <div className="intro-v2-target-links">
+                    <span>Product</span>
+                    <span>Pricing</span>
+                    <span>Contact</span>
+                  </div>
                 </div>
-              </div>
-              <div className="intro-v2-mockup-body">
-                <div className="intro-v2-mockup-sidebar">
-                  <div className="intro-v2-mockup-sidebar-item active"></div>
-                  <div className="intro-v2-mockup-sidebar-item"></div>
-                  <div className="intro-v2-mockup-sidebar-item"></div>
-                  <div className="intro-v2-mockup-sidebar-item"></div>
+                <div className="intro-v2-target-hero">
+                  <div className="intro-v2-target-copy">
+                    <span className="intro-v2-target-eyebrow">New SaaS page</span>
+                    <div className="intro-v2-target-input">
+                      <span className="intro-v2-target-input-placeholder">Build a launch page with pricing</span>
+                      <span className="intro-v2-target-caret"></span>
+                    </div>
+                    <div className="intro-v2-target-headline">
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div className="intro-v2-target-text">
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div className="intro-v2-target-actions">
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                  <div className="intro-v2-target-panel">
+                    <div className="intro-v2-target-chart">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div className="intro-v2-target-metric">
+                      <strong>94%</strong>
+                      <span>Ready</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="intro-v2-mockup-main">
-                  <div className="intro-v2-mockup-card"></div>
-                  <div className="intro-v2-mockup-card"></div>
-                  <div className="intro-v2-mockup-card small"></div>
+                <div className="intro-v2-target-grid">
+                  <div className="intro-v2-target-feature"></div>
+                  <div className="intro-v2-target-feature"></div>
+                  <div className="intro-v2-target-feature"></div>
+                </div>
+                <div className="intro-v2-build-cursor">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 3l7.5 18 2.5-7 7-2.5L4 3z"></path>
+                  </svg>
                 </div>
               </div>
 
               {/* Extension Overlay */}
               <div className="intro-v2-extension-overlay">
                 <div className="intro-v2-extension-header">
-                  <Logo size={20} />
-                  <span>Kanban driven Agent</span>
+                  <div className="intro-v2-extension-brand">
+                    <Logo size={20} />
+                    <span>Kanban driven Agent</span>
+                  </div>
+                  <div className="intro-v2-extension-actions">
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+                <div className="intro-v2-extension-form">
+                  <span></span>
+                  <span></span>
+                </div>
+                <div className="intro-v2-agent-working">
+                  <span className="intro-v2-agent-spinner"></span>
+                  <span>Agent is working</span>
                 </div>
                 <div className="intro-v2-extension-mini-board">
                   <div className="intro-v2-ext-col">
-                    <div className="intro-v2-ext-col-header">Backlog</div>
-                    <div className="intro-v2-ext-card"></div>
-                    <div className="intro-v2-ext-card"></div>
+                    <div className="intro-v2-ext-col-header">Backlog <span>2</span></div>
+                    <div className="intro-v2-ext-card">
+                      <span className="intro-v2-ext-card-title"></span>
+                      <span className="intro-v2-ext-card-meta"></span>
+                    </div>
+                    <div className="intro-v2-ext-card">
+                      <span className="intro-v2-ext-card-title short"></span>
+                      <span className="intro-v2-ext-card-meta"></span>
+                    </div>
                   </div>
                   <div className="intro-v2-ext-col">
-                    <div className="intro-v2-ext-col-header">In Progress</div>
-                    <div className="intro-v2-ext-card active"></div>
+                    <div className="intro-v2-ext-col-header">In Progress <span>1</span></div>
+                    <div className="intro-v2-ext-card active">
+                      <span className="intro-v2-ext-card-title"></span>
+                      <span className="intro-v2-ext-card-meta"></span>
+                      <span className="intro-v2-ext-progress"></span>
+                    </div>
                   </div>
                   <div className="intro-v2-ext-col">
-                    <div className="intro-v2-ext-col-header">Review</div>
-                    <div className="intro-v2-ext-card review"></div>
+                    <div className="intro-v2-ext-col-header">Review <span>1</span></div>
+                    <div className="intro-v2-ext-card review">
+                      <span className="intro-v2-ext-card-title"></span>
+                      <span className="intro-v2-ext-card-meta"></span>
+                    </div>
                   </div>
                   <div className="intro-v2-ext-col">
-                    <div className="intro-v2-ext-col-header">Shipped</div>
-                    <div className="intro-v2-ext-card done"></div>
+                    <div className="intro-v2-ext-col-header">Shipped <span>1</span></div>
+                    <div className="intro-v2-ext-card done">
+                      <span className="intro-v2-ext-card-title short"></span>
+                      <span className="intro-v2-ext-card-meta"></span>
+                    </div>
                   </div>
                 </div>
               </div>
